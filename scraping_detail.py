@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-html_text = requests.get('https://jogja.tribunnews.com/').text
+html_text = requests.get('https://jogja.tribunnews.com/2025/04/24/progres-kasus-kekerasan-seksual-guru-besar-farmasi-ugm-pemeriksaan-internal-dimulai-mei').text
 soup = BeautifulSoup(html_text, 'lxml')
 news = soup.find_all('li', class_='p1520 art-list pos_rel')
 
@@ -18,10 +18,10 @@ for item in news:
         description_tag = item.find('div', class_='grey2 pt5 f13 ln18 txt-oev-2')
         description = description_tag.text.strip() if description_tag else None
 
-        # Mengambil sumber berita
-        source_tag = item.find('a', class_='fbo2 tsa-2')
-        source = source_tag.text.strip() if source_tag else None
-        source_url = source_tag['href'] if source_tag else None
+        # # Mengambil sumber berita
+        # source_tag = item.find('a', class_='fbo2 tsa-2')
+        # source = source_tag.text.strip() if source_tag else None
+        # source_url = source_tag['href'] if source_tag else None
 
         # Mengambil waktu publikasi
         time_tag = item.find('time', class_='foot timeago')
@@ -36,8 +36,8 @@ for item in news:
                 "title": title,
                 "url": article_url,
                 "description": description,
-                "source": source,
-                "source_url": source_url,
+                # "source": source,
+                # "source_url": source_url,
                 "time_published": time_published,
                 "image_url": image_url
         })

@@ -1,49 +1,50 @@
 from bs4 import BeautifulSoup
 import requests
 import json
+import os
 
-html_text = requests.get('https://jogja.tribunnews.com/2025/04/24/progres-kasus-kekerasan-seksual-guru-besar-farmasi-ugm-pemeriksaan-internal-dimulai-mei').text
-soup = BeautifulSoup(html_text, 'lxml')
-news = soup.find_all('li', class_='p1520 art-list pos_rel')
+# Daftar URL yang akan di-scrape
+# urls = [
+#         'https://jogja.tribunnews.com/2025/04/24/progres-kasus-kekerasan-seksual-guru-besar-farmasi-ugm-pemeriksaan-internal-dimulai-mei',
+#         'https://jogja.tribunnews.com/2025/04/24/ac-milan-kunci-juara-coppa-italia-menurut-tijjani-reijnders',
+#         'https://jogja.tribunnews.com/2025/04/24/update-kabar-pemilik-raminten-meninggal-hamzah-sulaiman-disemayamkan-di-rumah-duka-pukj-yogyakarta'
+# ]
 
-news_data = []
+with open("database/tribun.json", "r", encoding="utf-8") as file:
+    data = json.load(file)
 
-for item in news:
-        # Mengambil judul artikel
-        title_tag = item.find('h3').find('a')
-        title = title_tag.text.strip() if title_tag else None
-        article_url = title_tag['href'] if title_tag else None
+news_detail = []
+urls = [item['url'] for item in data]
 
-        # Mengambil deskripsi artikel
-        description_tag = item.find('div', class_='grey2 pt5 f13 ln18 txt-oev-2')
-        description = description_tag.text.strip() if description_tag else None
+for url in urls:
+        try:
+                # Mendapatkan HTML dari URL
+                response = requests.get(url)
+                response.raise_for_status()  # Memastikan permintaan berhasil
+                html_text = response.text
+        except requests.exceptions.RequestException as e:
+                print(f"Error fetching the URL {url}: {e}")
+                continue
 
-        # # Mengambil sumber berita
-        # source_tag = item.find('a', class_='fbo2 tsa-2')
-        # source = source_tag.text.strip() if source_tag else None
-        # source_url = source_tag['href'] if source_tag else None
+        # Parsing HTML menggunakan BeautifulSoup
+        soup = BeautifulSoup(html_text, 'lxml')
 
-        # Mengambil waktu publikasi
-        time_tag = item.find('time', class_='foot timeago')
-        time_published = time_tag.text.strip() if time_tag else None
+        # Mengambil semua elemen <p>
+        news = soup.find_all('p')
 
-        # Mengambil gambar thumbnail
-        image_tag = item.find('img')
-        image_url = image_tag['src'] if image_tag else None
+        # Menggabungkan semua teks dari elemen <p> menjadi satu string
+        content = " ".join(para.get_text().strip() for para in news if para.get_text().strip())
+        news_detail.append({"url": url, "content": content})
 
-        # Append hasil scraping ke list
-        news_data.append({
-                "title": title,
-                "url": article_url,
-                "description": description,
-                # "source": source,
-                # "source_url": source_url,
-                "time_published": time_published,
-                "image_url": image_url
-        })
+# Pastikan direktori untuk menyimpan file JSON ada
+output_dir = 'database'
+os.makedirs(output_dir, exist_ok=True)
 
 # Export hasil scraping ke file JSON
-with open('database/tribun.json', 'w', encoding='utf-8') as json_file:
-        json.dump(news_data, json_file, ensure_ascii=False, indent=4)
-
-print("Data has been exported to tribun.json")
+output_file = os.path.join(output_dir, 'tribun_detail.json')
+try:
+        with open(output_file, 'w', encoding='utf-8') as json_file:
+                json.dump(news_detail, json_file, ensure_ascii=False, indent=4)
+        print(f"Data has been exported to {output_file}")
+except IOError as e:
+        print(f"Error writing to file: {e}")

@@ -3,12 +3,6 @@ import requests
 import json
 import os
 
-# Daftar URL yang akan di-scrape
-# urls = [
-#         'https://jogja.tribunnews.com/2025/04/24/progres-kasus-kekerasan-seksual-guru-besar-farmasi-ugm-pemeriksaan-internal-dimulai-mei',
-#         'https://jogja.tribunnews.com/2025/04/24/ac-milan-kunci-juara-coppa-italia-menurut-tijjani-reijnders',
-#         'https://jogja.tribunnews.com/2025/04/24/update-kabar-pemilik-raminten-meninggal-hamzah-sulaiman-disemayamkan-di-rumah-duka-pukj-yogyakarta'
-# ]
 
 with open("database/tribun.json", "r", encoding="utf-8") as file:
     data = json.load(file)

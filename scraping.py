@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import json
 import os
+import time
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -103,6 +104,7 @@ def scrape_and_analyze_news(news_data):
 
 # Main function
 def main():
+    start_time = time.time()
     # Step 1: Scraping Dashboard News
     news_data = scrape_dashboard_news()
 
@@ -121,6 +123,7 @@ def main():
         print(f"Combined data has been exported to {output_file}")
     except IOError as e:
         print(f"Error writing to file: {e}")
+    print(f"Total waktu eksekusi: {time.time() - start_time:.2f} detik")
 
 if __name__ == "__main__":
     main()

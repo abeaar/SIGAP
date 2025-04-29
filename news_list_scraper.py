@@ -221,7 +221,7 @@ def scrape_popular_times():
     soup = BeautifulSoup(response.text, 'lxml')
 
     news_list = []
-    news_items = soup.select('.carousel-single .owl-stage .owl-item .item')
+    news_items = soup.select('div.card.position-relative')
 
     for item in news_items:
         title_tag = item.select_one('h1')
@@ -234,10 +234,13 @@ def scrape_popular_times():
         image_tag = item.select_one('img.card-img-top')
         image_url = image_tag['src'] if image_tag else None
 
-        category_tag = item.select_one('span.text-muted')
+        category_tag = item.select_one('span.text-warning')
         category = category_tag.text.strip() if category_tag else None
 
-        viewers_tag = item.select_one('span.fn80')
+        date_tag = item.select_one('span.float-left.fn80')
+        date = date_tag.text.strip() if date_tag else None
+
+        viewers_tag = item.select_one('span.float-right.fn80')
         viewers = viewers_tag.text.strip() if viewers_tag else None
 
         news = {
@@ -245,6 +248,7 @@ def scrape_popular_times():
             'url': full_link,
             'image': image_url,
             'category': category,
+            'date': date,
             'viewers': viewers,
         }
         news_list.append(news)

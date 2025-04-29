@@ -85,7 +85,7 @@ def main():
 
         news_list = scrape_and_analyze_news(news_list)
 
-        save_path = f"{portal_name}_news.json"
+        save_path = f"{portal_name}.json"
         save_json(save_path, news_list)
         print(f"Saved {portal_name} news to {save_path}")
 

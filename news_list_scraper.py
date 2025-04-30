@@ -1,8 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
-import json
-import os
-import time
+
 
 def scrape_tribun():
     print("Scraping dashboard...")
@@ -251,6 +249,99 @@ def scrape_popular_times():
             'date': date,
             'viewers': viewers,
         }
+        news_list.append(news)
+
+    return news_list
+
+def scrape_kedaulatanrakyat():
+    url = 'https://www.krjogja.com/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    news_list = []
+    news_items = soup.select('.latest__item')  # Mengambil semua berita dari class 'latest__item'
+
+    for item in news_items:
+        # Mengambil judul
+        title_tag = item.select_one('.latest__title a')
+        title = title_tag.text.strip() if title_tag else None
+        
+        # Mengambil link berita
+        link = title_tag['href'] if title_tag else None
+        full_link = 'https://www.krjogja.com' + link if link and link.startswith('/') else link
+
+        # Mengambil gambar
+        image_tag = item.select_one('.latest__img img')
+        image_url = image_tag['src'] if image_tag else None
+
+        # Mengambil kategori
+        category_tag = item.select_one('.latest__subtitle a')
+        category = category_tag.text.strip() if category_tag else None
+
+        # Mengambil tanggal dan waktu
+        datetime_tag = item.select_one('.latest__date')
+        datetime_text = datetime_tag.text.strip() if datetime_tag else None
+
+        # Menyusun hasil scraping dalam dictionary
+        news = {
+            'title': title,
+            'url': full_link,
+            'image': image_url,
+            'category': category,
+            'datetime': datetime_text,
+        }
+        
+        # Menambahkan berita ke dalam list
+        news_list.append(news)
+
+    return news_list
+
+
+def scrape_popular_kedaulatanrakyat():
+    url = 'https://www.krjogja.com/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    news_list = []
+    news_items = soup.select('.most__item')  # Mengambil semua elemen berita di bagian populer
+
+    for item in news_items:
+        # Mengambil judul
+        title_tag = item.select_one('.most__title')
+        title = title_tag.text.strip() if title_tag else None
+
+        # Mengambil link berita
+        link_tag = item.select_one('.most__link')
+        link = link_tag['href'] if link_tag else None
+        full_link = 'https://www.krjogja.com' + link if link and link.startswith('/') else link
+
+        # Mengambil gambar
+        image_tag = item.select_one('.most__img img')
+        image_url = image_tag['src'] if image_tag else None
+
+        # Mengambil nomor urut (ranking)
+        number_tag = item.select_one('.most__number')
+        number = number_tag.text.strip() if number_tag else None
+
+        # Mengambil kategori (jika ada)
+        category_tag = item.select_one('.most__right .latest__subtitle')
+        category = category_tag.text.strip() if category_tag else None
+
+        # Mengambil tanggal (jika ada)
+        datetime_tag = item.select_one('.latest__date')
+        datetime_text = datetime_tag.text.strip() if datetime_tag else None
+
+        # Menyusun hasil scraping dalam dictionary
+        news = {
+            'title': title,
+            'url': full_link,
+            'image': image_url,
+            'category': category,
+            'datetime': datetime_text,
+            'number': number
+        }
+        
+        # Menambahkan berita ke dalam list
         news_list.append(news)
 
     return news_list

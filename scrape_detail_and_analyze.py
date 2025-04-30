@@ -41,6 +41,8 @@ def scrape_and_analyze_news(news_data):
                 ollama_response.raise_for_status()
                 result_text = ollama_response.json().get("response", "")
 
+                item['content'] = content
+                
                 if "Kategori:" in result_text:
                     summary_solution, category_line = result_text.rsplit("Kategori:", 1)
                     item['solution'] = summary_solution.strip()
@@ -49,7 +51,6 @@ def scrape_and_analyze_news(news_data):
                     item['solution'] = result_text.strip()
                     item['category'] = "Unknown"
 
-                item['content'] = content
 
             except requests.exceptions.RequestException as e:
                 print(f"Error connecting to Ollama API: {e}")
@@ -65,17 +66,19 @@ def save_json(filename, data):
         
 def main():
     portal_scrapers = {
-        'tribun': news_list_scraper.scrape_tribun,
-        'tribun_popular': news_list_scraper.scrape_popular_tribun,
-        'detik': news_list_scraper.scrape_detik,
-        'detik_popular': news_list_scraper.scrape_popular_detik,
-        'times': news_list_scraper.scrape_times,
-        'times_popular': news_list_scraper.scrape_popular_times,
+        # 'tribun': news_list_scraper.scrape_tribun,
+        # 'tribun_popular': news_list_scraper.scrape_popular_tribun,
+        # 'detik': news_list_scraper.scrape_detik,
+        # 'detik_popular': news_list_scraper.scrape_popular_detik,
+        # 'times': news_list_scraper.scrape_times,
+        # 'times_popular': news_list_scraper.scrape_popular_times,
+        'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
+        'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
     }
 
     total_start_time = time.time()  # Timer untuk keseluruhan proses
 
-    for portal_name, scraper_func in portal_scrapers.items():
+    for portal_name, scraper_func in portal_scrapers.items():  
         print(f"\n=== Scraping portal: {portal_name.upper()} ===")
         
         portal_start_time = time.time()  # Timer per portal

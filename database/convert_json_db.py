@@ -1,66 +1,83 @@
-import sqlite3
+import os
 import json
+from sqlalchemy import create_engine, Column, Integer, String, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-# Open the JSON files and load data
-with open('tribun.json', 'r', encoding='utf-8') as json_file:
-    tribun_data = json.load(json_file)
+# Directory containing JSON files
+directory = 'e:\\Program\\KP\\backend\\database'
 
-with open('tribun_detail.json', 'r', encoding='utf-8') as json_file:
-    tribun_detail_data = json.load(json_file)
+# List to store combined data
+combined_data = []
 
-with open('hasil_analisis.json', 'r', encoding='utf-8') as json_file:
-    hasil_analisis_data = json.load(json_file)
+# Iterate through all JSON files in the directory
+for filename in os.listdir(directory):
+    if filename.endswith('.json'):
+        file_path = os.path.join(directory, filename)
+        with open(file_path, 'r', encoding='utf-8') as json_file:
+            try:
+                data = json.load(json_file)
+                if isinstance(data, list):  # Ensure the JSON file contains a list of records
+                    combined_data.extend(data)
+                else:
+                    print(f"Skipping {filename}: Not a list of records.")
+            except json.JSONDecodeError as e:
+                print(f"Error decoding {filename}: {e}")
 
-# Combine the data from all JSON files based on specific keys
-data = []
+# Ensure there is data to process
+if not combined_data:
+    print("No valid JSON data found.")
+else:
+    # Write combined data to a new JSON file
+    output_file = os.path.join(directory, 'combined_news.json')
+    with open(output_file, 'w', encoding='utf-8') as outfile:
+        json.dump(combined_data, outfile, ensure_ascii=False, indent=4)
+    print(f"Combined JSON data has been written to {output_file}")
 
-# Create a dictionary for quick lookup of tribun_detail_data by 'url'
-tribun_detail_dict = {item['url']: item for item in tribun_detail_data}
+json_file_path = output_file
+# Database connection and setup
 
-# Create a dictionary for quick lookup of hasil_analisis_data by 'content'
-hasil_analisis_dict = {item['content']: item for item in hasil_analisis_data}
+# SQLAlchemy setup
+Base = declarative_base()
+engine = create_engine('sqlite:///news.db')  # SQLite database file
+Session = sessionmaker(bind=engine)
+session = Session()
 
-# Merge tribun_data with tribun_detail_data based on 'url'
-for tribun_item in tribun_data:
-    url = tribun_item.get('url')
-    merged_item = tribun_item.copy()
-    
-    if url in tribun_detail_dict:
-        merged_item.update(tribun_detail_dict[url])
-    
-    # Merge with hasil_analisis_data based on 'content'
-    content = merged_item.get('content')
-    if content in hasil_analisis_dict:
-        merged_item.update(hasil_analisis_dict[content])
-    
-    data.append(merged_item)
+# Define the News model
+class News(Base):
+    __tablename__ = 'news'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String, nullable=True)
+    url = Column(String, nullable=True)
+    image = Column(String, nullable=True)
+    category = Column(String, nullable=True)
+    datetime = Column(String, nullable=True)
+    content = Column(Text, nullable=True)
+    solution = Column(Text, nullable=True)
 
-# Output the combined data to a JSON file
-with open('testing.json', 'w', encoding='utf-8') as output_file:
-    json.dump(data, output_file, ensure_ascii=False, indent=4)
+# Create the table
+Base.metadata.create_all(engine)
 
-# # Create or connect to an SQLite database
-# conn = sqlite3.connect('news.db')  # Replace with your database name
-# cursor = conn.cursor()
+# Read the combined JSON file
+if os.path.exists(json_file_path):
+    with open(json_file_path, 'r', encoding='utf-8') as file:
+        data = json.load(file)
 
-# # Create a table based on the keys of the first item in the JSON data
-# # Assumption: Your JSON data is a list of dictionaries (list of records)
-# columns = ', '.join(data[0].keys())  # Get column names
-# columns_with_types = ', '.join([f"{key} TEXT" for key in data[0].keys()])  # Define all columns as TEXT
-# create_table_query = f"CREATE TABLE IF NOT EXISTS TRIBUN (ID INTEGER PRIMARY KEY AUTOINCREMENT, {columns_with_types})"
+    # Insert data into the database
+    for item in data:
+        news_entry = News(
+            title=item.get('title'),
+            url=item.get('url'),
+            image=item.get('image'),
+            category=item.get('category'),
+            datetime=item.get('datetime'),
+            content=item.get('content'),
+            solution=item.get('solution')
+        )
+        session.add(news_entry)
 
-# # Execute the table creation query
-# cursor.execute(create_table_query)
-
-# # Insert data into the table
-# for record in data:
-#     # Add the placeholders for each value, excluding ID (ID will be auto-generated)
-#     placeholders = ', '.join('?' * len(record))  
-#     insert_query = f"INSERT INTO TRIBUN ({columns}) VALUES ({placeholders})"
-#     cursor.execute(insert_query, tuple(record.values()))  # Insert each record
-
-# # Commit the transaction and close the connection
-# conn.commit()
-# conn.close()
-
-# print("Data successfully inserted into the SQL database.")
+    # Commit the transaction
+    session.commit()
+    print("Data successfully inserted into the database.")
+else:
+    print(f"File {json_file_path} not found.")

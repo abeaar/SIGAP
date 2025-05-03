@@ -66,12 +66,12 @@ def save_json(filename, data):
         
 def main():
     portal_scrapers = {
-        # 'tribun': news_list_scraper.scrape_tribun,
-        # 'tribun_popular': news_list_scraper.scrape_popular_tribun,
-        # 'detik': news_list_scraper.scrape_detik,
-        # 'detik_popular': news_list_scraper.scrape_popular_detik,
-        # 'times': news_list_scraper.scrape_times,
-        # 'times_popular': news_list_scraper.scrape_popular_times,
+        'tribun': news_list_scraper.scrape_tribun,
+        'tribun_popular': news_list_scraper.scrape_popular_tribun,
+        'detik': news_list_scraper.scrape_detik,
+        'detik_popular': news_list_scraper.scrape_popular_detik,
+        'times': news_list_scraper.scrape_times,
+        'times_popular': news_list_scraper.scrape_popular_times,
         'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
         'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
     }
@@ -88,7 +88,7 @@ def main():
 
         news_list = scrape_and_analyze_news(news_list)
 
-        save_path = f"{portal_name}.json"
+        save_path = f"database/{portal_name}.json"
         save_json(save_path, news_list)
         print(f"Saved {portal_name} news to {save_path}")
 

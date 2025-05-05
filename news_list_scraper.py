@@ -151,10 +151,12 @@ def scrape_popular_detik():
 
     news_data = []
     for item in articles:
-        link_tag = item.select_one('a.media__link')
-        title = link_tag.text.strip() if link_tag else None
-        article_url = link_tag['href'] if link_tag and link_tag.has_attr('href') else None
-
+        # link_tag = item.select_one('a.media__title')
+        # title = link_tag.text.strip() if link_tag else None
+        # article_url = link_tag['href'] if link_tag and link_tag.has_attr('href') else None
+        title_tag = item.select_one('h3.media__title a')
+        title = title_tag.text.strip() if title_tag else None
+        article_url = title_tag['href'] if title_tag and title_tag.has_attr('href') else None
         image_span = item.select_one('span.ratiobox')
         image_style = image_span['style'] if image_span and image_span.has_attr('style') else ''
         image_url = None

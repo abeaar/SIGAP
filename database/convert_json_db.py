@@ -4,10 +4,10 @@ from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.schema import Table
 
-directory = 'C:/Programming/Kuliah/SIGAP/database'
+directory = './database'
 
 Base = declarative_base()
-engine = create_engine('sqlite:///news.db')
+engine = create_engine('sqlite:///database/news.db')
 Session = sessionmaker(bind=engine)
 session = Session()
 

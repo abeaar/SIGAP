@@ -66,27 +66,16 @@ def save_json(filename, data):
         
 def main():
     portal_scrapers = {
-<<<<<<< HEAD
         # 'tribun': news_list_scraper.scrape_tribun,
         # 'tribun_popular': news_list_scraper.scrape_popular_tribun,
-        # 'detik': news_list_scraper.scrape_detik,
-        # 'detik_popular': news_list_scraper.scrape_popular_detik,
+        'detik': news_list_scraper.scrape_detik,
+        'detik_popular': news_list_scraper.scrape_popular_detik,
         'times': news_list_scraper.scrape_times,
-        # 'times_popular': news_list_scraper.scrape_popular_times,
-        # 'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
-        # 'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
-        # 'idntimes': news_list_scraper.scrape_idntimes,
-        # 'idntimes_popular': news_list_scraper.scrape_popular_idntimes,
-=======
-        # 'tribun': news_list_scraper.scrape_tribun,    
-        # # 'tribun_popular': news_list_scraper.scrape_popular_tribun,
-        # 'detik': news_list_scraper.scrape_detik,
-        # 'detik_popular': news_list_scraper.scrape_popular_detik,
-        # 'times': news_list_scraper.scrape_times,
-        # 'times_popular': news_list_scraper.scrape_popular_times,
-        # 'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
-        # 'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
->>>>>>> 61e95e38127555503c04f1db1bad10d497bd02d9
+        'times_popular': news_list_scraper.scrape_popular_times,
+        'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
+        'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
+        'idntimes': news_list_scraper.scrape_idntimes,
+        'idntimes_popular': news_list_scraper.scrape_popular_idntimes,
     }
 
     total_start_time = time.time()  # Timer untuk keseluruhan proses
@@ -99,7 +88,7 @@ def main():
         news_list = scraper_func()
         print(f"Total news fetched: {len(news_list)}")
 
-        # news_list = scrape_and_analyze_news(news_list)
+        news_list = scrape_and_analyze_news(news_list)
 
         save_path = f"database/{portal_name}.json"
         save_json(save_path, news_list)

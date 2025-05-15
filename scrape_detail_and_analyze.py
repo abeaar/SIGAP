@@ -66,6 +66,7 @@ def save_json(filename, data):
         
 def main():
     portal_scrapers = {
+<<<<<<< HEAD
         # 'tribun': news_list_scraper.scrape_tribun,
         # 'tribun_popular': news_list_scraper.scrape_popular_tribun,
         # 'detik': news_list_scraper.scrape_detik,
@@ -76,6 +77,16 @@ def main():
         # 'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
         # 'idntimes': news_list_scraper.scrape_idntimes,
         # 'idntimes_popular': news_list_scraper.scrape_popular_idntimes,
+=======
+        # 'tribun': news_list_scraper.scrape_tribun,    
+        # # 'tribun_popular': news_list_scraper.scrape_popular_tribun,
+        # 'detik': news_list_scraper.scrape_detik,
+        # 'detik_popular': news_list_scraper.scrape_popular_detik,
+        # 'times': news_list_scraper.scrape_times,
+        # 'times_popular': news_list_scraper.scrape_popular_times,
+        # 'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
+        # 'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
+>>>>>>> 61e95e38127555503c04f1db1bad10d497bd02d9
     }
 
     total_start_time = time.time()  # Timer untuk keseluruhan proses

@@ -1,9 +1,15 @@
 import time
 from bs4 import BeautifulSoup
 import requests
+<<<<<<< HEAD
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from datetime import datetime
+=======
+from datetime import datetime
+
+now = datetime.now().strftime("%d %m %Y")
+>>>>>>> 61e95e38127555503c04f1db1bad10d497bd02d9
 
 def scrape_tribun():
     print("Scraping dashboard...")
@@ -23,13 +29,6 @@ def scrape_tribun():
         title = title_tag.text.strip() if title_tag else None
         article_url = title_tag['href'] if title_tag else None
 
-        description_tag = item.find('div', class_='grey2 pt5 f13 ln18 txt-oev-2')
-        description = description_tag.text.strip() if description_tag else None
-
-        source_tag = item.find('a', class_='fbo2 tsa-2')
-        source = source_tag.text.strip() if source_tag else None
-        source_url = source_tag['href'] if source_tag else None
-
         time_tag = item.find('time', class_='foot timeago')
         time_published = time_tag.text.strip() if time_tag else None
 
@@ -39,12 +38,14 @@ def scrape_tribun():
         news_data.append({
             "title": title,
             "url": article_url,
-            "description": description,
-            "source": source,
-            "source_url": source_url,
+            "image": image_url,
             "time_published": time_published,
+<<<<<<< HEAD
             "image_url": img_url,
             "content": None
+=======
+            "scrape_date": now
+>>>>>>> 61e95e38127555503c04f1db1bad10d497bd02d9
         })
 
     return news_data
@@ -76,19 +77,12 @@ def scrape_popular_tribun():
         time_tag = item.select_one('div.grey.pt3 time')
         time_published = time_tag['title'] if time_tag and time_tag.has_attr('title') else None
 
-        source = "Tribun Jogja"
-        source_url = "https://jogja.tribunnews.com/"
-        description = None  # Tidak ada deskripsi pendek di sini
-
         news_data.append({
             "title": title,
             "url": article_url,
-            "description": description,
-            "source": source,
-            "source_url": source_url,
+            "image": image_url,
             "time_published": time_published,
-            "image_url": image_url,
-            "content": None
+            "scrape_date": now
         })
 
     return news_data
@@ -111,31 +105,43 @@ def scrape_detik():
         title = title_tag.text.strip() if title_tag else None
         article_url = title_tag['href'] if title_tag else None
 
-        description = None  # Tidak ada di Detik list
-        source = "Detik Jogja"
-        source_url = "https://www.detik.com/jogja"
 
         time_tag = item.select_one('div.media__date span')
         time_published = time_tag.text.strip() if time_tag else None
 
+        # Ambil gambar dari elemen span.ratiobox
         image_url = None
         image_tag = item.select_one('span.ratiobox')
-        if image_tag and 'background-image' in image_tag.get('style', ''):
-            style = image_tag['style']
-            try:
-                image_url = style.split('url("')[1].split('")')[0]
-            except IndexError:
-                image_url = None
+        
+        # Debug: Cek apakah image_tag ditemukan
+        if image_tag:
+            print("Image Tag Found!")
+            # Debug: Menampilkan atribut style
+            style = image_tag.get('style', '')
+            print(f"Style Attribute: {style}")
+            
+            # Mengecek apakah ada background-image di style
+            if 'background-image:' in style and 'url("' in style:
+                try:
+                    # Ekstrak URL gambar pertama
+                    image_url = style.split('url("')[1].split('")')[0]
+                    # Mengganti &quot; dengan tanda kutip ganda (")
+                    image_url = image_url.replace("&quot;", '"')
+                    print(f"Extracted Image URL: {image_url}")
+                except IndexError:
+                    print("Error extracting image URL")
+                    image_url = None
+            else:
+                print("No valid background-image URL found in style")
+        else:
+            print("Image tag not found")
 
         news_data.append({
             "title": title,
             "url": article_url,
-            "description": description,
-            "source": source,
-            "source_url": source_url,
+            "image": image_url,
             "time_published": time_published,
-            "image_url": image_url,
-            "content": None
+            "scrape_date": now,
         })
 
     return news_data
@@ -171,19 +177,12 @@ def scrape_popular_detik():
         date_tag = item.select_one('div.media__date span')
         time_published = date_tag['title'].strip() if date_tag and date_tag.has_attr('title') else None
 
-        source = "detikJogja"
-        source_url = "https://www.detik.com/terpopuler/jogja/"
-        description = None  # Tidak ada deskripsi pendek di sini
-
         news_data.append({
             "title": title,
             "url": article_url,
-            "description": description,
-            "source": source,
-            "source_url": source_url,
+            "image": image_url,
             "time_published": time_published,
-            "image_url": image_url,
-            "content": None
+            "scrape_date": now,
         })
 
     return news_data
@@ -202,8 +201,6 @@ def scrape_times():
         full_link = 'https://jogja.times.co.id' + link if link.startswith('/') else link
         image_tag = item.select_one('img.imaged')
         image_url = image_tag['src'] if image_tag else None
-        category_tag = item.select_one('header')
-        category = category_tag.text.strip() if category_tag else None
         datetime_tag = item.select_one('span.text-muted')
         datetime_text = None
         if datetime_tag:
@@ -223,8 +220,8 @@ def scrape_times():
             'title': title,
             'url': full_link,
             'image': image_url,
-            'category': category,
-            'datetime': datetime_text,
+            'time_publish': datetime_text,
+            'scrape_time': now,
         }
         news_list.append(news)
 
@@ -249,22 +246,16 @@ def scrape_popular_times():
         image_tag = item.select_one('img.card-img-top')
         image_url = image_tag['src'] if image_tag else None
 
-        category_tag = item.select_one('span.text-warning')
-        category = category_tag.text.strip() if category_tag else None
-
         date_tag = item.select_one('span.float-left.fn80')
         date = date_tag.text.strip() if date_tag else None
 
-        viewers_tag = item.select_one('span.float-right.fn80')
-        viewers = viewers_tag.text.strip() if viewers_tag else None
 
         news = {
             'title': title,
             'url': full_link,
             'image': image_url,
-            'category': category,
-            'date': date,
-            'viewers': viewers,
+            'time_publish': date,
+            'scrape_time': now,
         }
         news_list.append(news)
 
@@ -291,10 +282,6 @@ def scrape_kedaulatanrakyat():
         image_tag = item.select_one('.latest__img img')
         image_url = image_tag['src'] if image_tag else None
 
-        # Mengambil kategori
-        category_tag = item.select_one('.latest__subtitle a')
-        category = category_tag.text.strip() if category_tag else None
-
         # Mengambil tanggal dan waktu
         datetime_tag = item.select_one('.latest__date')
         datetime_text = datetime_tag.text.strip() if datetime_tag else None
@@ -304,8 +291,8 @@ def scrape_kedaulatanrakyat():
             'title': title,
             'url': full_link,
             'image': image_url,
-            'category': category,
-            'datetime': datetime_text,
+            'time_publish': datetime_text,
+            'scrape_time': now,
         }
         
         # Menambahkan berita ke dalam list
@@ -331,31 +318,28 @@ def scrape_popular_kedaulatanrakyat():
         link_tag = item.select_one('.most__link')
         link = link_tag['href'] if link_tag else None
         full_link = 'https://www.krjogja.com' + link if link and link.startswith('/') else link
+        # Scrap kembali dari sumber full_link untuk mengambil detail berita dan gambarnya
+        detail_response = requests.get(full_link, timeout=10)
+        detail_response.raise_for_status()
+        detail_soup = BeautifulSoup(detail_response.text, 'lxml')
 
-        # Mengambil gambar
-        image_tag = item.select_one('.most__img img')
-        image_url = image_tag['src'] if image_tag else None
+        # Mengambil gambar dari halaman detail jika tidak ada di halaman utama
+        
+        detail_image_tag = detail_soup.select_one('.photo__img img')
+        image_url = detail_image_tag['src'] if detail_image_tag and detail_image_tag.has_attr('src') else None
 
-        # Mengambil nomor urut (ranking)
-        number_tag = item.select_one('.most__number')
-        number = number_tag.text.strip() if number_tag else None
-
-        # Mengambil kategori (jika ada)
-        category_tag = item.select_one('.most__right .latest__subtitle')
-        category = category_tag.text.strip() if category_tag else None
-
-        # Mengambil tanggal (jika ada)
-        datetime_tag = item.select_one('.latest__date')
-        datetime_text = datetime_tag.text.strip() if datetime_tag else None
+        # Mengambil tanggal publikasi dari halaman detail jika tidak ada di halaman utama
+      
+        detail_date_tag = detail_soup.select_one('.read__info__date')
+        datetime_text = detail_date_tag.text.strip() if detail_date_tag else None
 
         # Menyusun hasil scraping dalam dictionary
         news = {
             'title': title,
             'url': full_link,
             'image': image_url,
-            'category': category,
-            'datetime': datetime_text,
-            'number': number
+            'time_publish': datetime_text,
+            'scrape_time': now,
         }
         
         # Menambahkan berita ke dalam list

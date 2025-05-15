@@ -1,6 +1,9 @@
+import time
 from bs4 import BeautifulSoup
 import requests
-
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from datetime import datetime
 
 def scrape_tribun():
     print("Scraping dashboard...")
@@ -30,8 +33,8 @@ def scrape_tribun():
         time_tag = item.find('time', class_='foot timeago')
         time_published = time_tag.text.strip() if time_tag else None
 
-        image_tag = item.find('img')
-        image_url = image_tag['src'] if image_tag else None
+        img_tag = item.select_one('div.fr.mt5.pos_rel img')
+        img_url = img_tag['src'] if img_tag and img_tag.has_attr('src') else None
 
         news_data.append({
             "title": title,
@@ -40,7 +43,7 @@ def scrape_tribun():
             "source": source,
             "source_url": source_url,
             "time_published": time_published,
-            "image_url": image_url,
+            "image_url": img_url,
             "content": None
         })
 
@@ -202,7 +205,19 @@ def scrape_times():
         category_tag = item.select_one('header')
         category = category_tag.text.strip() if category_tag else None
         datetime_tag = item.select_one('span.text-muted')
-        datetime_text = datetime_tag.text.strip() if datetime_tag else None
+        datetime_text = None
+        if datetime_tag:
+            raw_text = datetime_tag.text.strip()
+            # Jika formatnya seperti "4 jam yang lalu", gunakan tanggal hari ini
+            if "yang lalu" in raw_text:
+                now = datetime.now()
+                datetime_text = now.strftime("%d %m %y")
+            else:
+                try:
+                    dt = datetime.strptime(raw_text, "%d/%m/%Y %H:%M")
+                    datetime_text = dt.strftime("%d %m %y")
+                except Exception:
+                    datetime_text = raw_text
 
         news = {
             'title': title,
@@ -344,6 +359,89 @@ def scrape_popular_kedaulatanrakyat():
         }
         
         # Menambahkan berita ke dalam list
+        news_list.append(news)
+
+    return news_list
+
+def scrape_idntimes():
+    url = 'https://jogja.idntimes.com/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    news_list = []
+    news_items = soup.select('div#latest-article div.box-latest')
+
+    for item in news_items:
+        # Judul
+        title_tag = item.select_one('h2.title-text')
+        title = title_tag.text.strip() if title_tag else None
+
+        # Link
+        link_tag = item.select_one('a.box-panel')
+        link = link_tag['href'] if link_tag and link_tag.has_attr('href') else None
+        full_link = 'https://jogja.idntimes.com' + link if link and link.startswith('/') else link
+
+        # Gambar
+        image_tag = item.select_one('img')
+        image_url = image_tag['src'] if image_tag else None
+
+        # Kategori
+        category_tag = item.select_one('span.category a')
+        category = category_tag.text.strip() if category_tag else None
+
+        # Waktu
+        datetime_tag = item.select_one('time.date')
+        datetime_text = datetime_tag.text.strip() if datetime_tag else None
+
+        news = {
+            'title': title,
+            'url': full_link,
+            'image': image_url,
+            'category': category,
+            'datetime': datetime_text,
+        }
+
+        news_list.append(news)
+
+    return news_list
+
+def scrape_popular_idntimes():
+    url = 'https://jogja.idntimes.com/'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'lxml')
+
+    news_list = []
+    news_items = soup.select('div.box-trending')
+
+    for item in news_items:
+        # Judul
+        title_tag = item.select_one('h2.title-text')
+        title = title_tag.text.strip() if title_tag else None
+
+        # Link
+        link_tag = item.select_one('a.trending-click')
+        link = link_tag['href'] if link_tag and link_tag.has_attr('href') else None
+        full_link = 'https://jogja.idntimes.com' + link if link and link.startswith('/') else link
+
+        # Gambar
+        image_url = link_tag['data-image-url'] if link_tag and link_tag.has_attr('data-image-url') else None
+
+        # Kategori
+        category_tag = item.select_one('span.category a')
+        category = category_tag.text.strip() if category_tag else None
+
+        # Waktu
+        datetime_tag = item.select_one('time.date')
+        datetime_text = datetime_tag.text.strip() if datetime_tag else None
+
+        news = {
+            'title': title,
+            'url': full_link,
+            'image': image_url,
+            'category': category,
+            'datetime': datetime_text,
+        }
+
         news_list.append(news)
 
     return news_list

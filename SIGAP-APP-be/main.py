@@ -1,7 +1,18 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # atau ["*"] untuk semua origin (tidak disarankan untuk production)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 DB_PATH = "./database/news.db"
 
 TERKINI_TABLES = ["detik", "kedaulatanrakyat", "times"]

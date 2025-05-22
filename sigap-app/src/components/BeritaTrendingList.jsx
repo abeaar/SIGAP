@@ -5,12 +5,13 @@ const BeritaTrendingList = () => {
   const [berita, setBerita] = useState([]);
 
   useEffect(() => {
-    import("../data/BeritaTrendingDummy.json")
-      .then((module) => setBerita(module.default))
-      .catch((error) =>
-        console.error("Gagal mengambil data trending:", error)
-      );
-  }, []);
+      fetch("http://localhost:8000/terpopuler")
+        .then((response) => response.json())
+        .then((data) => setBerita(data.terkini || []))
+        .catch((error) =>
+          console.error("Gagal mengambil data terkini:", error)
+        );
+    }, []);
 
   return (
     <div className="d-flex overflow-auto px-3">

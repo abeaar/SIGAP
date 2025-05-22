@@ -7,7 +7,7 @@ const BeritaCard = ({
   time_published,
   title,
   description,
-  image_url,
+  image,
   source,
 }) => {
   const isHorizontal = layout === "horizontal";
@@ -20,7 +20,7 @@ const BeritaCard = ({
         <div className="row g-0">
           <div className="col-md-4">
             <img
-              src={image_url}
+              src={image}
               alt={title}
               className="img-fluid h-100"
               style={{
@@ -67,7 +67,7 @@ const BeritaCard = ({
     >
       <div className={`d-flex ${isHorizontal ? "flex-column" : "flex-row"}`}>
         <img
-          src={image_url}
+          src={image}
           alt={title}
           className="img-fluid rounded-top"
           style={{

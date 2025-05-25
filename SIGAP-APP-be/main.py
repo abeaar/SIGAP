@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import pytz
 
 import scrape_detail_and_analyze 
+import convert_json_db
 
 app = FastAPI()
 
@@ -88,6 +89,7 @@ async def schedule_scraping():
 
         print("[Scheduler] Running daily scraping task...")
         scrape_detail_and_analyze.main()
+        convert_json_db.run()
 
 
 @app.on_event("startup")

@@ -72,6 +72,37 @@ def get_news_by_portal(portal: str):
     return {"portal": table_name, "data": data}
 
 
+@app.get("/category/{category}")
+def get_news_by_category(category: str):
+    result = []
+    print(f"[DEBUG] Mencari kategori: {category}")
+    
+    for table in ALL_TABLES:
+        print(f"[DEBUG] Mengecek tabel: {table}")
+        data = fetch_all_from_table(table)
+        for row in data:
+            raw_cat = str(row.get("category", ""))
+            clean_cat = raw_cat.strip().lower()
+            if clean_cat == category.strip().lower():
+                row["portal"] = table
+                result.append(row)
+        print(f"[DEBUG] Ditemukan {len(result)} berita sejauh ini di tabel {table}")
+    
+    if len(result) == 0:
+        raise HTTPException(status_code=404, detail=f"Tidak ada berita dengan kategori '{category}'")
+    
+    return {"category": category, "data": result}
+
+@app.get("/news/filter/{portal}/{category}")
+def get_news_by_portal_category(portal: str, category: str):
+    table_name = portal.lower()
+    if table_name not in ALL_TABLES:
+        raise HTTPException(status_code=404, detail="Kategori di Portal ini tidak ditemukan")
+
+    data = fetch_all_from_table(f"{portal}_{category}")
+    return {"category": category, "data": data}
+
+
 # === Jadwal Scraping Otomatis ===
 
 async def schedule_scraping():

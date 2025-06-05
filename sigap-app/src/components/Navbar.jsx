@@ -1,27 +1,61 @@
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import logoIcon from "../assets/logo-sigap.png";      // ikon/logo kecil
-import logoText from "../assets/name-sigap.png";       // gambar tulisan "SIGAP"
+import React, { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import logoIcon from "../assets/logo-sigap.png";
+import logoText from "../assets/name-sigap.png";
 
 const Navbar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const [date, setDate] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const keyword = e.target.keyword.value.trim();
+    if (keyword) {
+      navigate(`/search?keyword=${encodeURIComponent(keyword)}`);
+    }
+  };
+
+  const handleDateChange = (e) => {
+    const selectedDate = e.target.value;
+    setDate(selectedDate);
+    if (selectedDate) {
+      navigate(`/filter-trending?date=${selectedDate}`);
+    }
+  };
 
   return (
     <>
-      {/* Bagian Atas - Logo dan Search */}
+      {/* Bagian Atas - Logo dan Search + Filter Date */}
       <div className="d-flex justify-content-between align-items-center px-5 py-3">
         <div className="d-flex align-items-center">
           <img src={logoIcon} alt="SIGAP Icon" width="80" height="80" className="me-2" />
           <img src={logoText} alt="SIGAP Text" height="55" />
         </div>
 
-        <div className="position-relative">
+        <div className="d-flex gap-2 align-items-center">
+          <form onSubmit={handleSearch} className="position-relative">
+            <input
+              type="text"
+              name="keyword"
+              className="form-control pe-5"
+              placeholder="Cari"
+            />
+            <button
+              type="submit"
+              className="btn btn-link position-absolute end-0 top-0 mt-2 me-2 p-0"
+              style={{ zIndex: 2 }}
+            >
+              <i className="bi bi-search"></i>
+            </button>
+          </form>
+
           <input
-            type="text"
-            className="form-control pe-5"
-            placeholder="Cari"
+            type="date"
+            className="form-control"
+            value={date}
+            onChange={handleDateChange}
           />
-          <i className="bi bi-search position-absolute"></i>
         </div>
       </div>
 
@@ -54,11 +88,10 @@ const Navbar = () => {
                 Media
               </Link>
               <ul className="dropdown-menu" aria-labelledby="mediaDropdown">
-                <li><Link className={`dropdown-item ${location.pathname === "/media/tribunjogja" ? "active" : ""}`} to="/media/tribunjogja">TribunJogja</Link></li>
                 <li><Link className={`dropdown-item ${location.pathname === "/media/krjogja" ? "active" : ""}`} to="/media/krjogja">KRJogja</Link></li>
                 <li><Link className={`dropdown-item ${location.pathname === "/media/detikjogja" ? "active" : ""}`} to="/media/detikjogja">detikJogja</Link></li>
-                <li><Link className={`dropdown-item ${location.pathname === "/media/kompasyogyakarta" ? "active" : ""}`} to="/media/kompasyogyakarta">KompasYogyakarta</Link></li>
-                <li><Link className={`dropdown-item ${location.pathname === "/media/inewsjogja" ? "active" : ""}`} to="/media/inewsjogja">iNewsJogja</Link></li>
+                <li><Link className={`dropdown-item ${location.pathname === "/media/idntimes" ? "active" : ""}`} to="/media/idntimes">IDNTimesJogja</Link></li>
+                <li><Link className={`dropdown-item ${location.pathname === "/media/times" ? "active" : ""}`} to="/media/times">TIMESJogja</Link></li>
               </ul>
             </li>
 
@@ -90,7 +123,6 @@ const Navbar = () => {
           </ul>
         </div>
       </nav>
-
     </>
   );
 };

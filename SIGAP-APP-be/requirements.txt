@@ -1,0 +1,10 @@
+sqlalchemy
+fastapi
+uvicorn
+beautifulsoup4
+requests
+sqlite3
+selenium
+time
+json
+pytz

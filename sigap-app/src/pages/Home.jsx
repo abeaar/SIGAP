@@ -1,30 +1,24 @@
 import React from 'react';
-import BeritaTrending from './BeritaTrending';
-import BeritaTerkini from './BeritaTerkini';
-import { Carousel } from 'react-bootstrap'; // Import Bootstrap Carousel
-import poldaImage from '../assets/polda.png'; // Pastikan gambarnya diimport
-import 'bootstrap/dist/css/bootstrap.min.css'; // Pastikan sudah import stylesheet Bootstrap
+import { Carousel } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import BeritaCard from "../components/BeritaCard";
+
+import poldaImage from '../assets/polda.png';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import BeritaTrendingList from "../components/BeritaTrendingList";
 import BeritaTerkiniList from "../components/BeritaTerkiniList";
+import Grafik from "../components/Grafik";
 
 const Home = () => (
   <div className="bg-white">
-    {/* Carousel Full Width, Tinggi 50% Layar */}
+    {/* Carousel */}
     <div className="position-relative">
       <Carousel>
         <Carousel.Item>
           <div className="carousel-item-container">
-            <img
-              className="d-block w-100"
-              src={poldaImage}
-              alt="Polda"
-            />
-            {/* Overlay hitam transparan */}
+            <img className="d-block w-100" src={poldaImage} alt="Polda" />
             <div className="overlay" />
-            {/* Teks tengah */}
-            <Carousel.Caption className="position-absolute top-50 start-50 translate-middle text-center">
+            <Carousel.Caption className="carousel-caption text-center">
               <h1 className="text-white fw-bold">Selamat Datang di SIGAP</h1>
               <p className="text-white">Sistem Informasi dan Analisis Pemberitaan BID TIK Polda DIY</p>
             </Carousel.Caption>
@@ -33,7 +27,8 @@ const Home = () => (
       </Carousel>
     </div>
 
-    {/* Berita Trending Section */}
+
+    {/* Berita Trending */}
     <section>
       <div className="d-flex align-items-center mb-3">
         <Link to="/berita-trending" className="text-dark text-decoration-none">
@@ -43,24 +38,25 @@ const Home = () => (
       <BeritaTrendingList />
     </section>
 
-    {/* Berita Terkini Section */}
-    <section>
-      <div className="d-flex align-items-center mb-3">
-        <Link to="/berita-terkini" className="text-dark text-decoration-none">
-          <h2 className="fw-bold">Berita Terkini</h2>
-        </Link>
-      </div>
-      <BeritaTerkiniList />
-    </section>
-
-    {/* Grafik Berita Trending (Placeholder) */}
-    <div className="container mt-5">
-      <h4 className="fw-bold">Grafik Berita Trending</h4>
-      <div className="bg-light p-5 text-center">
-        {/* Chart Placeholder */}
-        <p>Grafik Berita Trending akan ditampilkan di sini</p>
-      </div>
+ <div className="container my-4=">
+  <div className="d-flex flex-column flex-lg-row gap-4">
+    {/* Kolom kiri: Berita Terkini */}
+    <div className="flex-grow-1" style={{ flexBasis: '70%' }}>
+      <section>
+        <h2>Berita Terkini Hari Ini</h2>
+        <BeritaTerkiniList />
+      </section>
     </div>
+
+    {/* Kolom kanan: Grafik */}
+    <div className="flex-grow-1" style={{ flexBasis: '30%' }}>
+      <section>
+        <h2>Grafik Berita Terkini per Kategori</h2>
+        <Grafik />
+      </section>
+    </div>
+  </div>
+</div>
 
   </div>
 );

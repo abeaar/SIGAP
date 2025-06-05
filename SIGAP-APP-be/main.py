@@ -104,7 +104,7 @@ def get_news_by_portal_category(portal: str, category: str):
 
 
 # === Jadwal Scraping Otomatis ===
-
+    
 async def schedule_scraping():
     while True:
         now = datetime.now(pytz.timezone('Asia/Jakarta'))

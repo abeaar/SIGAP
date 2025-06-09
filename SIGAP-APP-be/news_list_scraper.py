@@ -341,7 +341,7 @@ def scrape_kedaulatanrakyat():
         link = title_tag['href'] if title_tag else None
         url = 'https://www.krjogja.com' + link if link and link.startswith('/') else link
 
-        image_tag = item.select_one('.latest__img img')
+        image_tag = item.select_one('div.latest__img a img')
         image = image_tag['src'] if image_tag else None
 
         datetime_tag = item.select_one('.latest__date')

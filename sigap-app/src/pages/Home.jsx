@@ -18,15 +18,18 @@ const Home = () => (
           <div className="carousel-item-container">
             <img className="d-block w-100" src={poldaImage} alt="Polda" />
             <div className="overlay" />
-            <Carousel.Caption className="carousel-caption text-center">
-              <h1 className="text-white fw-bold">Selamat Datang di SIGAP</h1>
-              <p className="text-white">Sistem Informasi dan Analisis Pemberitaan BID TIK Polda DIY</p>
+            <Carousel.Caption className="carousel-caption text-center px-2 px-md-4">
+              <h1 className="text-white fw-bold display-6 display-md-4 display-lg-3 mb-2" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.8rem)' }}>
+                SIGAP
+              </h1>
+              <p className="text-white fs-6 fs-md-5" style={{ fontSize: 'clamp(1rem, 3vw, 1.3rem)' }}>
+                Sistem Informasi dan Analisis Pemberitaan BID TIK POLDA DIY
+              </p>
             </Carousel.Caption>
           </div>
         </Carousel.Item>
       </Carousel>
     </div>
-
 
     {/* Berita Trending */}
     <section>
@@ -38,26 +41,26 @@ const Home = () => (
       <BeritaTrendingList />
     </section>
 
- <div className="container my-4=">
-  <div className="d-flex flex-column flex-lg-row gap-4">
-    {/* Kolom kiri: Berita Terkini */}
-    <div className="flex-grow-1" style={{ flexBasis: '70%' }}>
-      <section>
-        <h2>Berita Terkini Hari Ini</h2>
-        <BeritaTerkiniList />
-      </section>
+    <div className="container my-4">
+      <div className="row g-4">
+        {/* Kolom kiri: Berita Terkini */}
+        <div className="col-12 col-lg-8">
+          <section>
+            <Link to="/berita-terkini" className="text-dark text-decoration-none">
+              <h2 className="fw-bold">Berita Terkini Hari Ini</h2>
+            </Link>
+            <BeritaTerkiniList />
+          </section>
+        </div>
+        {/* Kolom kanan: Grafik */}
+        <div className="col-12 col-lg-4">
+          <section>
+            <h2>Grafik Berita Terkini per Kategori</h2>
+            <Grafik />
+          </section>
+        </div>
+      </div>
     </div>
-
-    {/* Kolom kanan: Grafik */}
-    <div className="flex-grow-1" style={{ flexBasis: '30%' }}>
-      <section>
-        <h2>Grafik Berita Terkini per Kategori</h2>
-        <Grafik />
-      </section>
-    </div>
-  </div>
-</div>
-
   </div>
 );
 

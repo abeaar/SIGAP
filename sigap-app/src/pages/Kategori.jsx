@@ -9,10 +9,11 @@ const kategoriLabelMap = {
   sosial: "Sosial",
   ekonomi: "Ekonomi",
   pendidikan: "Pendidikan",
-  olahraga: "Olahraga",
-  kriminalitas: "Kriminalitas",
-  bisnis: "Bisnis",
-  seni: "Seni",
+  teknologi: "Teknologi",
+  kesehatan:"Kesehatan",
+  agama: "Agama",
+  hiburan: "Hiburan",
+  kriminal: "Kriminal",
   // tambahkan jika ada kategori lain di dropdown
 };
 

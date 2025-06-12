@@ -31,7 +31,7 @@ const BeritaCard = ({
   if (isHorizontal && isFullPage) {
     return (
       <div
-        className="card mb-4 border-0 shadow-sm"
+        className="card overflow-hidden mb-4 border-0 shadow-sm"
         style={{ width: "100%", cursor: "pointer" }}
         onClick={handleClick}
       >

@@ -15,13 +15,11 @@ const BeritaTrendingList = () => {
   }, []);
 
   return (
-    <div className="d-flex overflow-auto px-3">
-      {(data || []).map((item) => (
-        <BeritaCard
-          key={`${item.portal}-${item.id}`}
-          id={`${item.portal}-${item.id}`}
-          {...item}
-        />
+    <div className="d-flex overflow-auto gap-3 px-1 pb-2">
+      {data.map((item) => (
+        <div style={{ minWidth: 270, flex: "0 0 auto" }} key={`${item.portal}-${item.id}`}>
+          <BeritaCard {...item} />
+        </div>
       ))}
     </div>
   );

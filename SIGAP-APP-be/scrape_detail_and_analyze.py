@@ -75,7 +75,7 @@ def main():
         'kedaulatanrakyat': news_list_scraper.scrape_kedaulatanrakyat,
         'kedaulatanrakyat_popular': news_list_scraper.scrape_popular_kedaulatanrakyat,
         'idntimes': news_list_scraper.scrape_idntimes,
-        'idntimes_popular': news_list_scraper.scrape_popular_idntimes,
+        'idntimes_popular': news_list_scraper.scrape_popular_idntimes
     }
 
     total_start_time = time.time()  # Timer untuk keseluruhan proses

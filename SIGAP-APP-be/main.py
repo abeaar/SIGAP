@@ -108,9 +108,7 @@ def get_news_by_portal_category(portal: str, category: str):
 async def schedule_scraping():
     while True:
         now = datetime.now(pytz.timezone('Asia/Jakarta'))
-        target = now.replace(hour=3 , minute=0, second=0, microsecond=0)
-        # target = now + timedelta(seconds=1)
-        
+        target = now.replace(hour=3  , minute=0, second=0, microsecond=0)        
 
         if now >= target:
             target += timedelta(days=1)

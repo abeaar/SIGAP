@@ -12,7 +12,7 @@ def scrape_and_analyze_news(news_data):
         if not url:
             continue
         
-        print(f"[{idx}/{len(news_data)}] Scraping detail: {url}")
+        print(f"[{idx}/{len(news_data)}] Analyzing The News: {url}")
         try:
             response = requests.get(url, timeout=10)
             response.raise_for_status()

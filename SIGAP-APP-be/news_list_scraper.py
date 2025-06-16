@@ -6,7 +6,8 @@ from selenium.webdriver.chrome.options import Options
 from datetime import datetime, timedelta
 import re
 
-now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+def get_now():
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def parse_time(raw_time):
     """
@@ -121,7 +122,7 @@ def scrape_tribun():
                 time_published = datetime.strptime(raw_time, "%d/%m/%Y %H:%M").strftime("%Y-%m-%d %H:%M:%S")
             except Exception:
                 # If parsing fails, just use the raw text
-                time_published = now if not raw_time else raw_time
+                time_published = get_now() if not raw_time else raw_time
         else:
             time_published = None
 
@@ -133,7 +134,7 @@ def scrape_tribun():
             "url": url,
             "image": image,
             "time_published": time_published,
-            "scrape_time": now,
+            "scrape_time": get_now(),
         })
 
     return news_data
@@ -172,7 +173,7 @@ def scrape_popular_tribun():
             "url": url,
             "image": image,
             "time_published": time_published,
-            "scrape_time": now
+            "scrape_time": get_now(),
         })
 
     return news_data
@@ -218,7 +219,7 @@ def scrape_detik():
             "url": url,
             "image": image,
             "time_published": time_published,
-            "scrape_time": now,
+            "scrape_time": get_now(),
         })
 
     return news_data
@@ -257,7 +258,7 @@ def scrape_popular_detik():
             "url": url,
             "image": image,
             "time_published": time_published,
-            "scrape_time": now,
+            "scrape_time": get_now(),
         })
 
     return news_data
@@ -287,7 +288,7 @@ def scrape_times():
             'url': url,
             'image': image,
             'time_published': time_published,
-            'scrape_time': now,
+            'scrape_time': get_now(),
         }
         news_list.append(news)
 
@@ -320,7 +321,7 @@ def scrape_popular_times():
             'url': url,
             'image': image,
             'time_published': time_published,
-            'scrape_time': now,
+            'scrape_time': get_now(),
         }
         news_list.append(news)
 
@@ -352,7 +353,7 @@ def scrape_kedaulatanrakyat():
             'url': url,
             'image': image,
             'time_published': time_published,
-            'scrape_time': now,
+            'scrape_time': get_now(),
         }
         news_list.append(news)
 
@@ -389,7 +390,7 @@ def scrape_popular_kedaulatanrakyat():
             'url': url,
             'image': image,
             'time_published': time_published,
-            'scrape_time': now,
+            'scrape_time': get_now(),
         }
         news_list.append(news)
 
@@ -434,7 +435,7 @@ def scrape_idntimes():
             'image': image,
             'category': category,
             'time_published': time_published,
-            'scrape_time': now,
+            'scrape_time': get_now(),
         }
 
         news_list.append(news)
@@ -486,7 +487,7 @@ def scrape_popular_idntimes():
             'image': image,
             'category': category,
             'time_published': time_published,
-            'scrape_time': now,
+            'scrape_time': get_now(),
         }
 
         news_list.append(news)

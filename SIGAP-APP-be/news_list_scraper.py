@@ -341,7 +341,7 @@ def scrape_kedaulatanrakyat():
         link = title_tag['href'] if title_tag else None
         url = 'https://www.krjogja.com' + link if link and link.startswith('/') else link
 
-        image_tag = item.select_one('.latest__img img')
+        image_tag = item.select_one('div.latest__img a img')
         image = image_tag['src'] if image_tag else None
 
         datetime_tag = item.select_one('.latest__date')
@@ -401,28 +401,36 @@ def scrape_idntimes():
     soup = BeautifulSoup(response.text, 'lxml')
 
     news_list = []
-    news_items = soup.select('div#latest-article div.box-latest')
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    # Ambil semua elemen berita dari dalam container utama
+    news_items = soup.select('div.css-hi7h29 div.css-v44eiu')
 
     for item in news_items:
-        title_tag = item.select_one('h2.title-text')
+        # Judul
+        title_tag = item.select_one('h3[data-testid="title-article"]')
         title = title_tag.text.strip() if title_tag else None
 
-        link_tag = item.select_one('a.box-panel')
-        link = link_tag['href'] if link_tag and link_tag.has_attr('href') else None
-        url = 'https://jogja.idntimes.com' + link if link and link.startswith('/') else link
+        # URL
+        link_tag = item.select_one('a[href]')
+        link = link_tag['href'] if link_tag else None
+        full_url = 'https://jogja.idntimes.com' + link if link and link.startswith('/') else link
 
+        # Gambar
         image_tag = item.select_one('img')
         image = image_tag['src'] if image_tag else None
 
-        category_tag = item.select_one('span.category a')
+        # Kategori/Lokasi
+        category_tag = item.select_one('span.css-544mn6')
         category = category_tag.text.strip() if category_tag else None
 
-        datetime_tag = item.select_one('time.date')
-        time_published = datetime_tag.text.strip() if datetime_tag else None
+        # Tanggal/Waktu publikasi
+        time_tag = item.select_one('span[data-testid="publish-date-article"]')
+        time_published = time_tag.text.strip() if time_tag else None
 
         news = {
             'title': title,
-            'url': url,
+            'url': full_url,
             'image': image,
             'category': category,
             'time_published': time_published,
@@ -438,28 +446,43 @@ def scrape_popular_idntimes():
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'lxml')
 
+    now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     news_list = []
-    news_items = soup.select('div.box-trending')
+
+    # Ambil kontainer utama berdasarkan struktur yang kamu berikan
+    container = soup.select_one('div.css-mkj7m6 > div.css-a6dqqb > div.css-xw0iqe > div.css-1i344v0')
+
+    if not container:
+        print("⚠️ Kontainer berita tidak ditemukan.")
+        return []
+
+    news_items = container.select('div.css-1i55tqt')
 
     for item in news_items:
-        title_tag = item.select_one('h2.title-text')
+        # Judul berita
+        title_tag = item.select_one('h3[data-testid="title-article"]')
         title = title_tag.text.strip() if title_tag else None
 
-        link_tag = item.select_one('a.trending-click')
-        link = link_tag['href'] if link_tag and link_tag.has_attr('href') else None
-        url = 'https://jogja.idntimes.com' + link if link and link.startswith('/') else link
+        # Link berita
+        link_tag = item.select_one('a[href]')
+        link = link_tag['href'] if link_tag else None
+        full_url = 'https://jogja.idntimes.com' + link if link and link.startswith('/') else link
 
-        image = link_tag['data-image-url'] if link_tag and link_tag.has_attr('data-image-url') else None
+        # Gambar
+        img_tag = item.select_one('img')
+        image = img_tag['src'] if img_tag and img_tag.has_attr('src') else None
 
-        category_tag = item.select_one('span.category a')
+        # Kategori
+        category_tag = item.select_one('span.css-544mn6')
         category = category_tag.text.strip() if category_tag else None
 
-        datetime_tag = item.select_one('time.date')
-        time_published = datetime_tag.text.strip() if datetime_tag else None
+        # Waktu publish
+        time_tag = item.select_one('span[data-testid="publish-date-article"]')
+        time_published = time_tag.text.strip() if time_tag else None
 
         news = {
             'title': title,
-            'url': url,
+            'url': full_url,
             'image': image,
             'category': category,
             'time_published': time_published,

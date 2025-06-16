@@ -104,11 +104,11 @@ def get_news_by_portal_category(portal: str, category: str):
 
 
 # === Jadwal Scraping Otomatis ===
-
+    
 async def schedule_scraping():
     while True:
         now = datetime.now(pytz.timezone('Asia/Jakarta'))
-        target = now.replace(hour=3, minute=0, second=0, microsecond=0)
+        target = now.replace(hour=3  , minute=0, second=0, microsecond=0)        
 
         if now >= target:
             target += timedelta(days=1)

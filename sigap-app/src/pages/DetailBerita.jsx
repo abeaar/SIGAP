@@ -29,12 +29,16 @@ const DetailBerita = () => {
       <div className="container">
         <div className="card shadow-sm p-4 rounded-4 bg-white">
           {/* Tombol kembali */}
-          <button
-            onClick={() => window.history.back()}
-            className="btn btn-outline-dark mb-3"
-          >
-            ← Kembali
-          </button>
+          <div className="mb-4">
+            <button
+              onClick={() => window.history.back()}
+              className="btn btn-outline-danger d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill shadow-sm"
+              style={{ fontWeight: 600, fontSize: "1rem" }}
+            >
+              <i className="bi bi-arrow-left"></i>
+              Kembali
+            </button>
+          </div>
 
           {/* Gambar utama */}
           <div className="mb-4">
@@ -85,8 +89,10 @@ const DetailBerita = () => {
                 href={berita.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-danger btn-lg px-5"
+                className="btn btn-danger btn-lg px-5 d-inline-flex align-items-center gap-2 rounded-pill shadow"
+                style={{ fontWeight: 600, fontSize: "1.1rem", letterSpacing: "0.5px" }}
               >
+                <i className="bi bi-box-arrow-up-right"></i>
                 Lihat Berita Asli
               </a>
             </div>

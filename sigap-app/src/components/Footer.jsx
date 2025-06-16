@@ -1,16 +1,17 @@
 import React from 'react';
-import logo from '../assets/logo-sigap.png'; // ganti dengan logo yang sesuai di folder assets
+import logo from '../assets/logo-sigap.png';
 
 const Footer = () => {
     return (
         <footer>
-            <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <img src={logo} alt="Logo TIK POLDA" />
+            <div className="container py-3 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div className="text-center text-md-start flex-shrink-0">
+                    <img src={logo} alt="Logo TIK POLDA" style={{ width: 120, height: 'auto', marginBottom: 12 }} />
+                </div>
                 <div className="text-center text-md-start">
-                    {/* Link ke website resmi Bid TIK POLDA DIY (contoh URL bisa diganti) */}
                     <p className="mb-0 fw-bold fs-5">
                         <a
-                            href="https://jogja.polri.go.id/polda/satker/bid-tik.html" // ganti dengan link asli jika ada
+                            href="https://jogja.polri.go.id/polda/satker/bid-tik.html"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-dark text-decoration-none"
@@ -18,8 +19,6 @@ const Footer = () => {
                             TIK POLDA DIY
                         </a>
                     </p>
-
-                    {/* Link ke Google Maps lokasi */}
                     <p className="mb-0 fs-6">
                         <a
                             href="https://maps.app.goo.gl/5jkiGwjur564wAYX7"
@@ -30,7 +29,6 @@ const Footer = () => {
                             Jl. Ring Road Utara, Sanggrahan, Condongcatur, Kec. Depok, Kabupaten Sleman
                         </a>
                     </p>
-
                     <p className="mb-0 fs-6">Daerah Istimewa Yogyakarta 55283</p>
                     <p className="mb-0 fs-6">(0274) 884444</p>
                 </div>

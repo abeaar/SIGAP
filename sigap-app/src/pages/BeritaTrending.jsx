@@ -20,7 +20,7 @@ function BeritaTrending() {
   }, []);
 
   return (
-    <div className="container my-5">
+    <div className="overflow-hidden container my-5">
       <h1 className="fw-bold mb-4">Semua Berita Trending</h1>
       {loading ? (
         <p>Loading...</p>

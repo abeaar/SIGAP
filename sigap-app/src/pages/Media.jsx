@@ -1,48 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchAllBerita } from "../config/api";
+import { fetchPortal } from "../config/api";
 import BeritaCard from "../components/BeritaCard";
-
-// Mapping nama media pada URL menjadi nilai 'portal' di API
-const portalMap = {
-  detikjogja: ["detik", "detik_popular"],
-  krjogja: ["kedaulatanrakyat", "kedaulatanrakyat_popular"],
-  idntimes: ["idntimes", "idntimes_popular"],
-  times: ["times", "times_popular"],
-
-  // Tambahkan sesuai media yang tersedia
-};
-const mediaLabelMap = {
-  krjogja: "KRJogja",
-  detikjogja: "detikJogja",
-  idntimes: "IDNTimesJogja",
-  times: "TIMESJogja",
-  // tambahkan jika ada media lain
-};
-
+import { useParams } from "react-router-dom";
 const Media = () => {
-  const { id } = useParams();
+  const { portal } = useParams(); // portal: 'krjogja', 'detikjogja', dst
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAllBerita().then((all) => {
-      const mediaParam = id.replace(/-/g, "").toLowerCase(); // normalize
-      const portalKeys = portalMap[mediaParam] || [mediaParam];
-      const filtered = all.filter(
-        (item) => portalKeys.includes(item.portal)
-      );
-      // filter duplikat berdasarkan ID
-      const unik = Array.from(new Map(filtered.map((item) => [item.id, item])).values());
-      setData(unik);
-    });
-  }, [id]);
+useEffect(() => {
+    if (!portal) return;
+    fetchPortal(portal)
+      .then((res) => {
+        setData(res.data); // res.data dari API backend
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [portal]);
 
-  const mediaParam = id.replace(/-/g, "").toLowerCase(); // normalize
-  const displayName = mediaLabelMap[mediaParam] || "Media";
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="container my-5">
-      <h1 className="fw-bold mb-4">Berita dari {displayName}</h1>
+      <h1 className="fw-bold mb-4">Berita dari {portal}</h1>
       {data.length > 0 ? (
         <div className="d-flex flex-column gap-3">
           {data.map((item) => (

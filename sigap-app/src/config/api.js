@@ -10,6 +10,11 @@ export const fetchTerpopuler = async () => {
   return res.json();
 };
 
+export async function fetchPortal(portal) {
+  const res = await fetch(`${BASE_API_URL}/news/${portal}`);
+  return res.json();
+};
+
 export const fetchAllBerita = async () => {
   const [terkini, terpopuler] = await Promise.all([
     fetchTerkini(),

@@ -68,7 +68,7 @@ def get_terkini_news():
 
     if not valid_entries:
         return {"terkini": []}
-
+ 
     # Cek apakah ada data untuk hari ini (WIB)
     today_wib = datetime.now(WIB).date()
     today_entries = [item for item in valid_entries if item['_scrape_date'] == today_wib]
@@ -137,6 +137,7 @@ def get_news_by_portal(portal: str):
         raise HTTPException(status_code=404, detail="Portal tidak ditemukan")
 
     data = fetch_all_from_table(table_name)
+    data.sort(key=lambda x: x['scrape_time'], reverse=True)
     return {"portal": table_name, "data": data}
 
 
@@ -159,6 +160,8 @@ def get_news_by_category(category: str):
     if len(result) == 0:
         raise HTTPException(status_code=404, detail=f"Tidak ada berita dengan kategori '{category}'")
     
+    result.sort(key=lambda x: x['scrape_time'], reverse=True)
+    
     return {"category": category, "data": result}
 
 @app.get("/news/filter/{portal}/{category}")
@@ -168,6 +171,7 @@ def get_news_by_portal_category(portal: str, category: str):
         raise HTTPException(status_code=404, detail="Kategori di Portal ini tidak ditemukan")
 
     data = fetch_all_from_table(f"{portal}_{category}")
+    data.sort(key=lambda x: x['scrape_time'], reverse=True)
     return {"category": category, "data": data}
 
 

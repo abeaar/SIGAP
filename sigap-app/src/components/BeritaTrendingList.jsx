@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchTerpopuler } from "../config/api";
 import BeritaCard from "./BeritaCard";
+//import { isRecent } from "../utils/dateFilter";
 //import BeritaTrendingDummy from "../data/BeritaTrendingDummy.json"; // Import data dummy
 //import BASE_API_URL from "../config/api";
 

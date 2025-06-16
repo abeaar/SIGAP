@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import pytz
 
 import scrape_detail_and_analyze 
@@ -20,7 +20,7 @@ app.add_middleware(
 
 DB_PATH = "./database/news.db"
 
-TERKINI_TABLES = ["detik", "kedaulatanrakyat", "times"]
+TERKINI_TABLES = ["detik", "kedaulatanrakyat", "times", "idntimes"]
 TERPOPULER_TABLES = ["detik_popular", "idntimes_popular", "kedaulatanrakyat_popular", "times_popular"]
 ALL_TABLES = TERKINI_TABLES + TERPOPULER_TABLES
 
@@ -39,26 +39,94 @@ def fetch_all_from_table(table_name: str):
         conn.close()
 
 
+# Zona waktu WIB = UTC+7
+WIB = timezone(timedelta(hours=7))
+
 @app.get("/terkini")
 def get_terkini_news():
     result = []
+
+    # Ambil semua data dan tandai asal tabel
     for table in TERKINI_TABLES:
         data = fetch_all_from_table(table)
         for d in data:
             d["portal"] = table
         result.extend(data)
-    return {"terkini": result}
 
+    # Ambil semua data yang memiliki scrape_time valid dan simpan tanggalnya
+    valid_entries = []
+    for item in result:
+        scrape_time_str = item.get('scrape_time')
+        if scrape_time_str:
+            try:
+                scrape_time = datetime.strptime(scrape_time_str, "%Y-%m-%d %H:%M:%S")
+                scrape_time = scrape_time.replace(tzinfo=timezone.utc).astimezone(WIB)
+                item['_scrape_date'] = scrape_time.date()
+                valid_entries.append(item)
+            except ValueError:
+                continue  # Skip jika format tidak valid
+
+    if not valid_entries:
+        return {"terkini": []}
+
+    # Cek apakah ada data untuk hari ini (WIB)
+    today_wib = datetime.now(WIB).date()
+    today_entries = [item for item in valid_entries if item['_scrape_date'] == today_wib]
+
+    if today_entries:
+        final_result = today_entries
+    else:
+        latest_date = max(item['_scrape_date'] for item in valid_entries)
+        final_result = [item for item in valid_entries if item['_scrape_date'] == latest_date]
+
+    # Hapus _scrape_date sebelum return
+    for item in final_result:
+        item.pop('_scrape_date', None)
+
+    return {"terkini": final_result}
 
 @app.get("/terpopuler")
 def get_terpopuler_news():
     result = []
+
+    # Ambil semua data dan tandai asal tabel
     for table in TERPOPULER_TABLES:
         data = fetch_all_from_table(table)
         for d in data:
             d["portal"] = table
         result.extend(data)
-    return {"terpopuler": result}
+
+    # Ambil semua data yang memiliki scrape_time valid dan simpan tanggalnya
+    valid_entries = []
+    for item in result:
+        scrape_time_str = item.get('scrape_time')
+        if scrape_time_str:
+            try:
+                scrape_time = datetime.strptime(scrape_time_str, "%Y-%m-%d %H:%M:%S")
+                scrape_time = scrape_time.replace(tzinfo=timezone.utc).astimezone(WIB)
+                item['_scrape_date'] = scrape_time.date()
+                valid_entries.append(item)
+            except ValueError:
+                continue  # Skip jika format tidak valid
+
+    if not valid_entries:
+        return {"terkini": []}
+
+    # Cek apakah ada data untuk hari ini (WIB)
+    today_wib = datetime.now(WIB).date()
+    today_entries = [item for item in valid_entries if item['_scrape_date'] == today_wib]
+
+    if today_entries:
+        final_result = today_entries
+    else:
+        latest_date = max(item['_scrape_date'] for item in valid_entries)
+        final_result = [item for item in valid_entries if item['_scrape_date'] == latest_date]
+
+    # Hapus _scrape_date sebelum return
+    for item in final_result:
+        item.pop('_scrape_date', None)
+
+    return {"terpopuler": final_result}
 
 
 @app.get("/news/{portal}")

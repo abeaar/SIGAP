@@ -15,6 +15,12 @@ export async function fetchPortal(portal) {
   return res.json();
 };
 
+export async function fetchCategory(category) {
+  const res = await fetch(`${BASE_API_URL}/category/${category}`);
+  if (!res.ok) throw new Error("Kategori tidak ditemukan");
+  return await res.json();
+}
+
 export const fetchAllBerita = async () => {
   const [terkini, terpopuler] = await Promise.all([
     fetchTerkini(),

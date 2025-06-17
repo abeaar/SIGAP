@@ -1,20 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BeritaCard from "../components/BeritaCard";
-import { fetchAllBerita } from "../config/api";
+import { fetchTerkini, fetchTerpopuler } from "../config/api";
 
 // Fungsi bantu untuk menyamakan format tanggal ke "YYYY-MM-DD"
 const formatDate = (dateStr) => {
   if (!dateStr) return "";
-  // Jika sudah format YYYY-MM-DD
-  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) {
-    return dateStr.slice(0, 10);
-  }
-  // Jika format ISO (YYYY-MM-DDTHH:mm:ssZ)
-  if (/^\d{4}-\d{2}-\d{2}T/.test(dateStr)) {
-    return dateStr.slice(0, 10);
-  }
-  // Jika format "DD Month YYYY" (misal: 4 Juni 2024)
+  if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return dateStr.slice(0, 10);
+  if (/^\d{4}-\d{2}-\d{2}T/.test(dateStr)) return dateStr.slice(0, 10);
   const parts = dateStr.split(" ");
   if (parts.length === 3) {
     const day = parseInt(parts[0], 10);
@@ -32,7 +25,6 @@ const formatDate = (dateStr) => {
       return `${yyyy}-${mm}-${dd}`;
     }
   }
-  // Fallback: coba parse dengan Date
   const date = new Date(dateStr);
   if (!isNaN(date.getTime())) {
     const yyyy = date.getFullYear();
@@ -49,11 +41,16 @@ const FilterTrending = () => {
   const [berita, setBerita] = useState([]);
 
   useEffect(() => {
-    fetchAllBerita().then((all) => {
+    Promise.all([fetchTerkini(), fetchTerpopuler()]).then(([terkiniRes, trendingRes]) => {
+      const terkini = Array.isArray(terkiniRes.terkini) ? terkiniRes.terkini : [];
+      const trending = Array.isArray(trendingRes.terpopuler) ? trendingRes.terpopuler : [];
+      // Gabungkan semua berita
+      const all = [...terkini, ...trending];
       // Hilangkan duplikat berdasarkan portal-id
       const unik = Array.from(
         new Map(all.map(item => [`${item.portal}-${item.id}`, item])).values()
       );
+      // Filter berdasarkan tanggal yang dipilih
       const filtered = unik.filter(
         (item) => formatDate(item.time_published) === selectedDate
       );
@@ -63,13 +60,12 @@ const FilterTrending = () => {
 
   return (
     <div className="container filter-wrapper">
-      <h2 className="filter-heading">Trending Tanggal: {selectedDate}</h2>
+      <h2 className="filter-heading">Trending & Terkini Tanggal: {selectedDate}</h2>
       {berita.length > 0 ? (
         <div className="filter-berita">
           {berita.map((item) => (
             <BeritaCard
               key={`${item.portal}-${item.id}`}
-              id={`${item.portal}-${item.id}`}
               {...item}
               layout="horizontal"
               pageType="page"
@@ -77,7 +73,7 @@ const FilterTrending = () => {
           ))}
         </div>
       ) : (
-        <p className="text-muted">Tidak ada berita trending untuk tanggal ini.</p>
+        <p className="text-muted">Tidak ada berita trending/terkini untuk tanggal ini.</p>
       )}
     </div>
   );

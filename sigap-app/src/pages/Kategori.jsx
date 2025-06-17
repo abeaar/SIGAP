@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { fetchAllBerita } from "../config/api";
+import { fetchCategory } from "../config/api";
 import BeritaCard from "../components/BeritaCard";
 
 const kategoriLabelMap = {
@@ -23,14 +23,20 @@ const Kategori = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAllBerita().then((all) => {
-      // Filter berdasarkan kategori (case-insensitive)
-      const filtered = all.filter(
-        (item) => item.category && item.category.toLowerCase() === kategoriId.toLowerCase()
-      );
-      setBerita(filtered);
-      setLoading(false);
-    });
+    setLoading(true);
+    fetchCategory(kategoriId)
+      .then((res) => {
+        // Pastikan setiap item punya portal dan id
+        const unik = Array.from(
+          new Map((res.data || []).map(item => [`${item.portal}-${item.id}`, item])).values()
+        );
+        setBerita(unik);
+        setLoading(false);
+      })
+      .catch(() => {
+        setBerita([]);
+        setLoading(false);
+      });
   }, [kategoriId]);
 
   const displayKategori = kategoriLabelMap[kategoriId?.toLowerCase()] || kategoriId;

@@ -1,44 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { fetchAllBerita } from "../config/api";
+import { fetchPortal } from "../config/api";
 import BeritaCard from "../components/BeritaCard";
+import { useParams } from "react-router-dom";
 
-// Mapping nama media pada URL menjadi nilai 'portal' di API
-const portalMap = {
-  detikjogja: ["detik", "detik_popular"],
-  krjogja: ["kedaulatanrakyat", "kedaulatanrakyat_popular"],
-  idntimes: ["idntimes", "idntimes_popular"],
-  times: ["times", "times_popular"],
-
-  // Tambahkan sesuai media yang tersedia
-};
+// Mapping label media untuk tampilan judul
 const mediaLabelMap = {
-  krjogja: "KRJogja",
-  detikjogja: "detikJogja",
+  kedaulatanrakyat: "KRJogja",
+  detik: "detikJogja",
   idntimes: "IDNTimesJogja",
   times: "TIMESJogja",
   // tambahkan jika ada media lain
 };
 
 const Media = () => {
-  const { id } = useParams();
+  const { portal } = useParams(); // portal: 'krjogja', 'detikjogja', dst
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAllBerita().then((all) => {
-      const mediaParam = id.replace(/-/g, "").toLowerCase(); // normalize
-      const portalKeys = portalMap[mediaParam] || [mediaParam];
-      const filtered = all.filter(
-        (item) => portalKeys.includes(item.portal)
-      );
-      // filter duplikat berdasarkan ID
-      const unik = Array.from(new Map(filtered.map((item) => [item.id, item])).values());
-      setData(unik);
-    });
-  }, [id]);
+    if (!portal) return;
+    fetchPortal(portal)
+      .then((res) => {
+        // Tambahkan portal jika belum ada di setiap item
+        const withPortal = (res.data || []).map(item => ({
+          ...item,
+          portal: item.portal || portal, // fallback ke param portal dari URL
+        }));
+        // Filter duplikat
+        const unik = Array.from(
+          new Map(withPortal.map((item) => [`${item.portal}-${item.id}`, item])).values()
+        );
+        setData(unik);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [portal]);
 
-  const mediaParam = id.replace(/-/g, "").toLowerCase(); // normalize
-  const displayName = mediaLabelMap[mediaParam] || "Media";
+  const displayName = mediaLabelMap[portal?.toLowerCase()] || portal;
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="container my-5">
@@ -48,7 +48,6 @@ const Media = () => {
           {data.map((item) => (
             <BeritaCard
               key={`${item.portal}-${item.id}`}
-              id={`${item.portal}-${item.id}`}
               {...item}
               layout="horizontal"
               pageType="page"

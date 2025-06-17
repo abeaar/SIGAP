@@ -12,7 +12,6 @@ const BeritaCard = ({
   description,
   image,
   image_url,
-  source,
 }) => {
   const navigate = useNavigate();
   const isHorizontal = layout === "horizontal";
@@ -53,7 +52,7 @@ const BeritaCard = ({
             <div className="card-body">
               {category && <span className="badge bg-danger mb-2">{category}</span>}
               <div className="text-muted mb-1" style={{ fontSize: "0.85rem" }}>
-                {source ? `${source} • ` : ""}{time_published}
+                {portal ? `${portal} • ` : ""}{time_published}
               </div>
               <h5 className="card-title fw-bold">{title}</h5>
               <p className="card-text" style={{ fontSize: "0.9rem" }}>{description}</p>
@@ -91,7 +90,7 @@ const BeritaCard = ({
           <div>
             {category && <span className="badge bg-danger mb-2">{category}</span>}
             <h6 className="card-title fw-bold">{title}</h6>
-            <small className="text-muted">{source ? `${source} • ` : ""}{time_published}</small>
+            <small className="text-muted">{portal ? `${portal} • ` : ""}{time_published}</small>
             <p className="card-text mt-2" style={{ fontSize: "0.85rem" }}>{description}</p>
           </div>
           <div className="d-flex gap-2 mt-2">

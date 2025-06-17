@@ -20,7 +20,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/berita-trending" element={<BeritaTrending />} />
         <Route path="/berita-terkini" element={<BeritaTerkini />} />
-        <Route path="/media/:id" element={<Media />} />
+        <Route path="/media/:portal" element={<Media />} />
         <Route path="/kategori/:kategoriId" element={<Kategori />} />
         <Route path="/search" element={<Search />} />
         <Route path="/filter-trending" element={<FilterTrending />} />

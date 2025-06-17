@@ -99,8 +99,8 @@ const Navbar = () => {
                   Media
                 </Link>
                 <ul className="dropdown-menu" aria-labelledby="mediaDropdown">
-                  <li><Link className={`dropdown-item ${location.pathname === "/media/krjogja" ? "active" : ""}`} to="/media/krjogja">KRJogja</Link></li>
-                  <li><Link className={`dropdown-item ${location.pathname === "/media/detikjogja" ? "active" : ""}`} to="/media/detikjogja">detikJogja</Link></li>
+                  <li><Link className={`dropdown-item ${location.pathname === "/media/kedaulatanrakyat" ? "active" : ""}`} to="/media/kedaulatanrakyat">KRJogja</Link></li>
+                  <li><Link className={`dropdown-item ${location.pathname === "/media/detik" ? "active" : ""}`} to="/media/detik">detikJogja</Link></li>
                   <li><Link className={`dropdown-item ${location.pathname === "/media/idntimes" ? "active" : ""}`} to="/media/idntimes">IDNTimesJogja</Link></li>
                   <li><Link className={`dropdown-item ${location.pathname === "/media/times" ? "active" : ""}`} to="/media/times">TIMESJogja</Link></li>
                 </ul>

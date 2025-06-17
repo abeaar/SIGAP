@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchTerkini } from "../config/api";
 import BeritaCard from "./BeritaCard";
+//import { isToday } from "../utils/dateFilter";
 //import BeritaTerkiniDummy from "../data/BeritaTerkiniDummy.json";
 
 const BeritaTerkiniList = () => {

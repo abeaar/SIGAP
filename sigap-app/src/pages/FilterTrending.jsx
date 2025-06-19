@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import BeritaCard from "../components/BeritaCard";
-import { fetchTerkini, fetchTerpopuler } from "../config/api";
+import { fetchAllBerita } from "../config/api";
 
 // Fungsi bantu untuk menyamakan format tanggal ke "YYYY-MM-DD"
 const formatDate = (dateStr) => {
   if (!dateStr) return "";
   if (/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return dateStr.slice(0, 10);
   if (/^\d{4}-\d{2}-\d{2}T/.test(dateStr)) return dateStr.slice(0, 10);
+
   const parts = dateStr.split(" ");
   if (parts.length === 3) {
     const day = parseInt(parts[0], 10);
@@ -19,19 +20,15 @@ const formatDate = (dateStr) => {
     const month = monthNames[parts[1].toLowerCase()];
     if (!isNaN(day) && month !== undefined && !isNaN(year)) {
       const date = new Date(year, month, day);
-      const yyyy = date.getFullYear();
-      const mm = String(date.getMonth() + 1).padStart(2, "0");
-      const dd = String(date.getDate()).padStart(2, "0");
-      return `${yyyy}-${mm}-${dd}`;
+      return date.toISOString().split("T")[0];
     }
   }
+
   const date = new Date(dateStr);
   if (!isNaN(date.getTime())) {
-    const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const dd = String(date.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
+    return date.toISOString().split("T")[0];
   }
+
   return "";
 };
 
@@ -41,31 +38,28 @@ const FilterTrending = () => {
   const [berita, setBerita] = useState([]);
 
   useEffect(() => {
-    Promise.all([fetchTerkini(), fetchTerpopuler()]).then(([terkiniRes, trendingRes]) => {
-      const terkini = Array.isArray(terkiniRes.terkini) ? terkiniRes.terkini : [];
-      const trending = Array.isArray(trendingRes.terpopuler) ? trendingRes.terpopuler : [];
-      // Gabungkan semua berita
-      const all = [...terkini, ...trending];
-      // Hilangkan duplikat berdasarkan portal-id
-      const unik = Array.from(
-        new Map(all.map(item => [`${item.portal}-${item.id}`, item])).values()
-      );
-      // Filter berdasarkan tanggal yang dipilih
-      const filtered = unik.filter(
-        (item) => formatDate(item.time_published) === selectedDate
-      );
-      setBerita(filtered);
+    if (!selectedDate) return;
+
+    fetchAllBerita().then((all) => {
+      const hasil = all.filter(item => {
+        const tanggal = formatDate(item.scrape_time);
+        return tanggal === selectedDate;
+      });
+      setBerita(hasil);
     });
   }, [selectedDate]);
 
   return (
-    <div className="container filter-wrapper">
-      <h2 className="filter-heading">Trending & Terkini Tanggal: {selectedDate}</h2>
+    <div className="container filter-wrapper my-5">
+      <h2 className="filter-heading mb-4">
+        Trending & Terkini Tanggal: <span className="text-danger">{selectedDate}</span>
+      </h2>
       {berita.length > 0 ? (
-        <div className="filter-berita">
+        <div className="filter-berita d-flex flex-column gap-3">
           {berita.map((item) => (
             <BeritaCard
               key={`${item.portal}-${item.id}`}
+              id={`${item.portal}-${item.id}`}
               {...item}
               layout="horizontal"
               pageType="page"
@@ -80,3 +74,4 @@ const FilterTrending = () => {
 };
 
 export default FilterTrending;
+ 

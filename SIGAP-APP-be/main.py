@@ -21,8 +21,8 @@ app.add_middleware(
 
 DB_PATH = "./database/news.db"
 
-TERKINI_TABLES = ["detik", "kedaulatanrakyat", "idntimes", "times"]
-TERPOPULER_TABLES = ["detik_popular", "kedaulatanrakyat_popular", "idntimes_popular", "times_popular"]
+TERKINI_TABLES = [ "times", "detik", "kedaulatanrakyat", "idntimes"]
+TERPOPULER_TABLES = [ "times_popular","detik_popular", "kedaulatanrakyat_popular", "idntimes_popular"]
 ALL_TABLES = TERKINI_TABLES + TERPOPULER_TABLES
 
 
@@ -258,15 +258,25 @@ def get_news_by_category(category: str):
     
     return {"category": category, "data": result}
 
-@app.get("/news/filter/{portal}/{category}")
+@app.get("/news/category/{portal}/{category}")
 def get_news_by_portal_category(portal: str, category: str):
     table_name = portal.lower()
     if table_name not in ALL_TABLES:
-        raise HTTPException(status_code=404, detail="Kategori di Portal ini tidak ditemukan")
+        raise HTTPException(status_code=404, detail="Portal tidak ditemukan")
 
-    data = fetch_all_from_table(f"{portal}_{category}")
-    data.sort(key=lambda x: x['scrape_time'], reverse=True)
-    return {"category": category, "data": data}
+    data = fetch_all_from_table(table_name)
+    filtered = []
+    for row in data:
+        raw_cat = str(row.get("category", ""))
+        clean_cat = raw_cat.strip().lower()
+        if clean_cat == category.strip().lower():
+            filtered.append(row)
+
+    if not filtered:
+        raise HTTPException(status_code=404, detail=f"Tidak ada berita dengan kategori '{category}' di portal '{portal}'")
+
+    filtered.sort(key=lambda x: x['scrape_time'], reverse=True)
+    return {"portal": portal, "category": category, "data": filtered}
 
 
 # === Jadwal Scraping Otomatis ===

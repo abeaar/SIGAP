@@ -43,7 +43,13 @@ const DetailBerita = () => {
           {/* Gambar utama */}
           <div className="mb-4">
             <img
-              src={berita.image_url || berita.image}
+              src={
+                !berita.image && !berita.image_url
+                  ? "/sigap-news.png"
+                  : (berita.image_url || berita.image).includes("blank.png")
+                  ? "/sigap-news.png"
+                  : berita.image_url || berita.image
+              }
               alt={berita.title}
               className="img-fluid rounded-3 w-100"
               style={{ maxHeight: "400px", objectFit: "cover" }}

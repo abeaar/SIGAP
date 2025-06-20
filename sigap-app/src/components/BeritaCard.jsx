@@ -56,7 +56,7 @@ const BeritaCard = ({
               className="img-fluid h-100"
               onError={(e) => {
                 e.target.onerror = null;
-                e.target.src = "/default-image.jpg";
+                e.target.src = "/sigap-news.png"; // Fallback image
               }}
               style={{
                 objectFit: "cover",

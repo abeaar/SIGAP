@@ -21,8 +21,8 @@ app.add_middleware(
 
 DB_PATH = "./database/news.db"
 
-TERKINI_TABLES = [ "times", "detik", "kedaulatanrakyat", "idntimes"]
-TERPOPULER_TABLES = [ "times_popular","detik_popular", "kedaulatanrakyat_popular", "idntimes_popular"]
+TERKINI_TABLES = ["detik", "kedaulatanrakyat", "idntimes", "times"]
+TERPOPULER_TABLES = ["detik_popular", "kedaulatanrakyat_popular", "idntimes_popular", "times_popular"]
 ALL_TABLES = TERKINI_TABLES + TERPOPULER_TABLES
 
 

@@ -59,7 +59,7 @@ const DetailBerita = () => {
           {/* Judul dan sumber */}
           <h2 className="fw-bold mb-2">{berita.title}</h2>
           <p className="text-muted mb-4">
-            {berita.source} • {berita.time_published}
+            {berita.portal} • {berita.time_published}
           </p>
 
           {/* Isi berita */}

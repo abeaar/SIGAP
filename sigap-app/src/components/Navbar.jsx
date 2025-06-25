@@ -40,14 +40,15 @@ const Navbar = () => {
                 type="text"
                 name="keyword"
                 className="form-control pe-5"
-                placeholder="Cari"
+                placeholder="Cari berita..."
+                aria-label="Search"
               />
               <button
                 type="submit"
-                className="btn btn-link position-absolute end-0 top-0 mt-2 me-2 p-0"
+                className="btn position-absolute top-50 end-0 translate-middle-y me-2 p-0 text-secondary"
                 style={{ zIndex: 2 }}
               >
-                <i className="bi bi-search"></i>
+                <i className="bi bi-search fs-5"></i>
               </button>
             </form>
             <input

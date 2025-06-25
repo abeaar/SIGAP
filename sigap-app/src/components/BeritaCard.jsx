@@ -74,11 +74,11 @@ const BeritaCard = ({
               </div>
               <h5 className="card-title fw-bold">{title}</h5>
               <p className="card-text" style={{ fontSize: "0.9rem" }}>{description}</p>
-              <div className="d-flex gap-3 text-secondary mt-2">
+              {/* <div className="d-flex gap-3 text-secondary mt-2">
                 <i className="bi bi-heart"></i>
                 <i className="bi bi-chat"></i>
                 <i className="bi bi-share"></i>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -111,11 +111,11 @@ const BeritaCard = ({
             <small className="text-muted">{portal ? `${portal} • ` : ""}{time_published}</small>
             <p className="card-text mt-2" style={{ fontSize: "0.85rem" }}>{description}</p>
           </div>
-          <div className="d-flex gap-2 mt-2">
+          {/* <div className="d-flex gap-2 mt-2">
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
             <i className="bi bi-share"></i>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

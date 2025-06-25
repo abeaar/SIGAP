@@ -3,6 +3,7 @@ import { Carousel } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import poldaImage from '../assets/polda.png';
+// import sigapImage from '../assets/carousel-sigap.png ';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import BeritaTrendingList from "../components/BeritaTrendingList";
@@ -28,6 +29,9 @@ const Home = () => (
             </Carousel.Caption>
           </div>
         </Carousel.Item>
+        {/* <Carousel.Item>
+          <img className="d-block w-100" src={sigapImage} alt="SIGAP" />
+        </Carousel.Item> */}
       </Carousel>
     </div>
 

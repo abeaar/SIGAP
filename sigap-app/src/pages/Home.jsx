@@ -14,7 +14,7 @@ const Home = () => (
   <div className="bg-white">
     {/* Carousel */}
     <div className="position-relative">
-      <Carousel>
+      <Carousel interval={3000} pause={false} controls={false} indicators={true}>
         <Carousel.Item>
           <div className="carousel-item-container">
             <img className="d-block w-100" src={sigapImage} alt="SIGAP" />

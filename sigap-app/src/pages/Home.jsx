@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import poldaImage from '../assets/polda.png';
 import sigapImage from '../assets/carousel.png';
+import welcomeImage from '../assets/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import BeritaTrendingList from "../components/BeritaTrendingList";
@@ -15,6 +16,9 @@ const Home = () => (
     {/* Carousel */}
     <div className="position-relative">
       <Carousel interval={3000} pause={false} controls={false} indicators={true}>
+        <Carousel.Item>
+          <img className="d-block w-100" src={welcomeImage} alt="Welcome" />
+        </Carousel.Item>
         <Carousel.Item>
           <div className="carousel-item-container">
             <img className="d-block w-100" src={sigapImage} alt="SIGAP" />

@@ -3,7 +3,8 @@ import { Carousel } from 'react-bootstrap';
 import { Link } from "react-router-dom";
 
 import poldaImage from '../assets/polda.png';
-// import sigapImage from '../assets/carousel-sigap.png ';
+import sigapImage from '../assets/carousel.png';
+import welcomeImage from '../assets/welcome.png';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import BeritaTrendingList from "../components/BeritaTrendingList";
@@ -14,24 +15,27 @@ const Home = () => (
   <div className="bg-white">
     {/* Carousel */}
     <div className="position-relative">
-      <Carousel>
+      <Carousel interval={3000} pause={false} controls={false} indicators={true}>
+        <Carousel.Item>
+          <img className="d-block w-100" src={welcomeImage} alt="Welcome" />
+        </Carousel.Item>
         <Carousel.Item>
           <div className="carousel-item-container">
-            <img className="d-block w-100" src={poldaImage} alt="Polda" />
-            <div className="overlay" />
-            <Carousel.Caption className="carousel-caption text-center px-2 px-md-4">
+            <img className="d-block w-100" src={sigapImage} alt="SIGAP" />
+            {/* <div className="overlay" /> */}
+            {/* <Carousel.Caption className="carousel-caption text-center px-2 px-md-4">
               <h1 className="text-white fw-bold display-6 display-md-4 display-lg-3 mb-2" style={{ fontSize: 'clamp(1.5rem, 5vw, 2.8rem)' }}>
                 SIGAP
               </h1>
               <p className="text-white fs-6 fs-md-5" style={{ fontSize: 'clamp(1rem, 3vw, 1.3rem)' }}>
                 Sistem Informasi dan Analisis Pemberitaan BID TIK POLDA DIY
               </p>
-            </Carousel.Caption>
+            </Carousel.Caption> */}
           </div>
         </Carousel.Item>
-        {/* <Carousel.Item>
-          <img className="d-block w-100" src={sigapImage} alt="SIGAP" />
-        </Carousel.Item> */}
+        <Carousel.Item>
+          <img className="d-block w-100" src={poldaImage} alt="Polda" />
+        </Carousel.Item>
       </Carousel>
     </div>
 

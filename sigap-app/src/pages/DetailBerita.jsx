@@ -83,7 +83,7 @@ const DetailBerita = () => {
                   style={{ height: "22px" }}
                 />
               </div>
-              <h5 className="fw-bold mb-3">SIGAP AI</h5>``
+              <h5 className="fw-bold mb-3">SIGAP AI</h5>
               <p className="mb-0">{berita.solution}</p>
             </div>
           )}

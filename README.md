@@ -116,7 +116,8 @@ Edit
             "solution": "Berikut adalah ringkasan berita:\n\nBerita ini membahas tentang rotasi jabatan beberapa pejabat utama di Polda DIY, termasuk Kapolresta Kota Jogja, Dir Reskrimsus Polda DIY, dan Itwasum Polda DIY. Rotasi jabatan ini dilakukan berdasarkan Surat Keputusan Kapolri dan STR Kapolri, dan melibatkan beberapa pejabat yang diangkat dan digantikan dalam posisi mereka.\n\nSolusi untuk masalah yang diangkat dalam berita ini adalah:\n\n* Sebagai solusi untuk rotasi jabatan yang dilakukan oleh Polda DIY, dapat dianut sebagai contoh bagi organisasi lain untuk melakukan rotasi jabatan secara teratur dan sesuai dengan kebutuhan.\n* Dapat juga disarankan agar pejabat yang diangkat memiliki pengalaman dan kemampuan yang lebih luas dalam menyelesaikan masalah dan meningkatkan kinerja organisasi.",
             "category": "politik"
         }
-      ]
+]
+]
 🛠️ Teknologi yang Digunakan
 Python 3.11+
 

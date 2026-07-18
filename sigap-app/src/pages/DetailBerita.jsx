@@ -43,7 +43,13 @@ const DetailBerita = () => {
           {/* Gambar utama */}
           <div className="mb-4">
             <img
-              src={berita.image_url || berita.image}
+              src={
+                !berita.image && !berita.image_url
+                  ? "/sigap-news.png"
+                  : (berita.image_url || berita.image).includes("blank.png")
+                  ? "/sigap-news.png"
+                  : berita.image_url || berita.image
+              }
               alt={berita.title}
               className="img-fluid rounded-3 w-100"
               style={{ maxHeight: "400px", objectFit: "cover" }}
@@ -53,7 +59,7 @@ const DetailBerita = () => {
           {/* Judul dan sumber */}
           <h2 className="fw-bold mb-2">{berita.title}</h2>
           <p className="text-muted mb-4">
-            {berita.source} • {berita.time_published}
+            {berita.portal} • {berita.time_published}
           </p>
 
           {/* Isi berita */}
@@ -77,7 +83,7 @@ const DetailBerita = () => {
                   style={{ height: "22px" }}
                 />
               </div>
-              <h5 className="fw-bold mb-3">SIGAP AI</h5>``
+              <h5 className="fw-bold mb-3">SIGAP AI</h5>
               <p className="mb-0">{berita.solution}</p>
             </div>
           )}

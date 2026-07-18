@@ -1,6 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
+
+// Fungsi untuk validasi gambar
+const isValidImage = (url) => {
+  if (!url || url === "null" || url.trim() === "") return false;
+  if (url.includes("blank.png")) return false;
+  return true;
+};
+
 const BeritaCard = ({
   id,
   portal,
@@ -16,7 +24,13 @@ const BeritaCard = ({
   const navigate = useNavigate();
   const isHorizontal = layout === "horizontal";
   const isFullPage = pageType === "page";
-  const gambar = image || image_url;
+  
+  // Gunakan image yang valid atau fallback ke default
+  const gambar = isValidImage(image)
+    ? image
+    : isValidImage(image_url)
+    ? image_url
+    : "/sigap-news.png";
 
   const handleClick = () => {
     if (id && portal) {
@@ -40,6 +54,10 @@ const BeritaCard = ({
               src={gambar}
               alt={title}
               className="img-fluid h-100"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = "/sigap-news.png"; // Fallback image
+              }}
               style={{
                 objectFit: "cover",
                 borderTopLeftRadius: "0.5rem",
@@ -56,11 +74,11 @@ const BeritaCard = ({
               </div>
               <h5 className="card-title fw-bold">{title}</h5>
               <p className="card-text" style={{ fontSize: "0.9rem" }}>{description}</p>
-              <div className="d-flex gap-3 text-secondary mt-2">
+              {/* <div className="d-flex gap-3 text-secondary mt-2">
                 <i className="bi bi-heart"></i>
                 <i className="bi bi-chat"></i>
                 <i className="bi bi-share"></i>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -93,11 +111,11 @@ const BeritaCard = ({
             <small className="text-muted">{portal ? `${portal} • ` : ""}{time_published}</small>
             <p className="card-text mt-2" style={{ fontSize: "0.85rem" }}>{description}</p>
           </div>
-          <div className="d-flex gap-2 mt-2">
+          {/* <div className="d-flex gap-2 mt-2">
             <i className="bi bi-heart"></i>
             <i className="bi bi-chat"></i>
             <i className="bi bi-share"></i>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 import news_list_scraper
+import os
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
 
@@ -88,7 +89,22 @@ def main():
         news_list = scraper_func()
         print(f"Total news fetched: {len(news_list)}")
 
-        news_list = scrape_and_analyze_news(news_list)
+        # Filtering: buang entry yang url-nya sudah ada di database json
+        save_path = f"database/{portal_name}.json"
+        existing_urls = set()
+        if os.path.exists(save_path):
+            try:
+                with open(save_path, 'r', encoding='utf-8') as f:
+                    existing_data = json.load(f)
+                    if isinstance(existing_data, list):
+                        existing_urls = {item.get('url') for item in existing_data if item.get('url')}
+            except Exception as e:
+                print(f"Gagal membaca {save_path} untuk filtering: {e}")
+
+        filtered_news_list = [item for item in news_list if item.get('url') not in existing_urls]
+        print(f"Total news after filtering: {len(filtered_news_list)} (removed {len(news_list) - len(filtered_news_list)})")
+
+        news_list = scrape_and_analyze_news(filtered_news_list)
 
         save_path = f"database/{portal_name}.json"
         save_json(save_path, news_list)
